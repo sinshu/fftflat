@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FftFlat", "FftFlat\FftFlat.csproj", "{0665A880-6610-42A3-AE97-1423F2AEB93E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FftFlat", "FftFlat\FftFlat.csproj", "{0665A880-6610-42A3-AE97-1423F2AEB93E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FftFlatTest", "FftFlatTest\FftFlatTest.csproj", "{70AE9C4E-909B-4D82-80E1-4A74429C71FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FftFlatTest", "FftFlatTest\FftFlatTest.csproj", "{70AE9C4E-909B-4D82-80E1-4A74429C71FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workspace", "Workspace\Workspace.csproj", "{06FBE237-B9F4-4509-AE47-836EB6FBA065}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workspace", "Workspace\Workspace.csproj", "{06FBE237-B9F4-4509-AE47-836EB6FBA065}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Benchmark\Benchmark.csproj", "{A2173637-549B-4FFA-A4AD-5DA853FE0B20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{06FBE237-B9F4-4509-AE47-836EB6FBA065}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06FBE237-B9F4-4509-AE47-836EB6FBA065}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06FBE237-B9F4-4509-AE47-836EB6FBA065}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2173637-549B-4FFA-A4AD-5DA853FE0B20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2173637-549B-4FFA-A4AD-5DA853FE0B20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2173637-549B-4FFA-A4AD-5DA853FE0B20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2173637-549B-4FFA-A4AD-5DA853FE0B20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
