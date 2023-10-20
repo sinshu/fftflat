@@ -5,71 +5,48 @@ using BenchmarkDotNet.Attributes;
 namespace Benchmark
 {
     [MemoryDiagnoser]
-    [RankColumn]
     public class Test
     {
-        private Complex[] values1024_fftFlat;
-        private Complex[] values1024_fftSharp;
-        private Complex[] values1024_mathNet;
-        private FftFlat.Fft fft1024;
+        private Complex[] values_fftFlat;
+        private Complex[] values_fftSharp;
+        private Complex[] values_mathNet;
+        private FftFlat.Fft fft;
 
-        private Complex[] values4096_fftFlat;
-        private Complex[] values4096_fftSharp;
-        private Complex[] values4096_mathNet;
-        private FftFlat.Fft fft4096;
+        [Params(256, 1024, 4096)]
+        public int Length;
 
         [GlobalSetup]
         public void Setup()
         {
-            values1024_fftFlat = Utility.Create(1024);
-            values1024_fftSharp = Utility.Create(1024);
-            values1024_mathNet = Utility.Create(1024);
-            fft1024 = new FftFlat.Fft(1024);
-
-            values4096_fftFlat = Utility.Create(4096);
-            values4096_fftSharp = Utility.Create(4096);
-            values4096_mathNet = Utility.Create(4096);
-            fft4096 = new FftFlat.Fft(4096);
+            values_fftFlat = DummyData.Create(Length);
+            values_fftSharp = DummyData.Create(Length);
+            values_mathNet = DummyData.Create(Length);
+            fft = new FftFlat.Fft(Length);
         }
 
         [Benchmark]
-        public void FftFlat1024()
+        public void FftFlat()
         {
-            fft1024.ForwardInplace(values1024_fftFlat);
+            fft.ForwardInplace(values_fftFlat);
+            fft.InverseInplace(values_fftFlat);
         }
 
         [Benchmark]
-        public void FftSharp1024()
+        public void FftSharp()
         {
-            FftSharp.FFT.Forward(values1024_fftSharp);
+            global::FftSharp.FFT.Forward(values_fftSharp);
+            global::FftSharp.FFT.Inverse(values_fftSharp);
         }
 
         [Benchmark]
-        public void MathNet1024()
+        public void MathNet()
         {
-            MathNet.Numerics.IntegralTransforms.Fourier.Forward(
-                values1024_mathNet,
-                MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
-        }
-
-        [Benchmark]
-        public void FftFlat4096()
-        {
-            fft4096.ForwardInplace(values4096_fftFlat);
-        }
-
-        [Benchmark]
-        public void FftSharp4096()
-        {
-            FftSharp.FFT.Forward(values4096_fftSharp);
-        }
-
-        [Benchmark]
-        public void MathNet4096()
-        {
-            MathNet.Numerics.IntegralTransforms.Fourier.Forward(
-                values4096_mathNet,
-                MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
+            global::MathNet.Numerics.IntegralTransforms.Fourier.Forward(
+                values_mathNet,
+                global::MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
+            global::MathNet.Numerics.IntegralTransforms.Fourier.Inverse(
+                values_mathNet,
+                global::MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
         }
     }
 }

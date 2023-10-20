@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Benchmark
 {
-    public static class Utility
+    public static class DummyData
     {
         public static Complex[] Create(int length)
         {

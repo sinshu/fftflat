@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Numerics;
-using MathNet.Numerics.IntegralTransforms;
 using NUnit.Framework;
 
 namespace FftFlatTest
 {
-    public class MathNet
+    public class FftSharpConsistency
     {
         [TestCase(8)]
         [TestCase(16)]
@@ -25,7 +24,7 @@ namespace FftFlatTest
             }
 
             var expected = values.ToArray();
-            Fourier.Forward(expected, FourierOptions.AsymmetricScaling);
+            FftSharp.FFT.Forward(expected);
 
             var actual = values.ToArray();
             var fft = new FftFlat.Fft(length);
@@ -56,7 +55,7 @@ namespace FftFlatTest
             }
 
             var expected = values.ToArray();
-            Fourier.Inverse(expected, FourierOptions.AsymmetricScaling);
+            FftSharp.FFT.Inverse(expected);
 
             var actual = values.ToArray();
             var fft = new FftFlat.Fft(length);

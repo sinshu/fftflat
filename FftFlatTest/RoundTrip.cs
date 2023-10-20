@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace FftFlatTest
 {
-    public class Inverse
+    public class RoundTrip
     {
         [TestCase(8)]
         [TestCase(16)]
