@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace FftFlatTest
 {
-    public class SimpleSignals
+    public class Forward
     {
         [TestCase(8)]
         [TestCase(16)]
