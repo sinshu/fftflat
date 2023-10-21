@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace FftFlatTest
 {
-    public class KissFftConsistency
+    public class KissFftInternalConsistency
     {
         private static readonly Complex[] twiddles8 = new Complex[]
         {
