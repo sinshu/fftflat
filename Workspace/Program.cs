@@ -7,29 +7,16 @@ static class Program
 {
     static void Main(string[] args)
     {
-        var n = 32;
+        var n = 8;
+        var fft = new Fft(n);
 
-        {
-            Console.WriteLine("=== TEST ===");
-            var fft = new Fft(n);
-            var data = new Complex[n];
-            data[0] = 1;
-            fft.ForwardInplace(data);
-            foreach (var value in data)
-            {
-                Console.WriteLine(value);
-            }
-        }
+        var input = new Complex[n];
+        input[0] = 1;
 
-        {
-            Console.WriteLine("=== MATH.NET ===");
-            var data = new Complex[n];
-            data[0] = 1;
-            Fourier.Forward(data, FourierOptions.AsymmetricScaling);
-            foreach (var value in data)
-            {
-                Console.WriteLine(value);
-            }
-        }
+        var output = new Complex[n];
+
+        fft.Forward(input, output);
+
+        Console.WriteLine();
     }
 }

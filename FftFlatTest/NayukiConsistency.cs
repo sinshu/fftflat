@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace FftFlatTest
 {
-    public class RoundTrip
+    public class NayukiConsistency
     {
         [TestCase(8)]
         [TestCase(16)]
@@ -14,19 +14,21 @@ namespace FftFlatTest
         [TestCase(256)]
         [TestCase(512)]
         [TestCase(1024)]
-        public void Random1(int length)
+        public void Forward(int length)
         {
             var random = new Random(42);
-            var expected = new Complex[length];
+            var values = new Complex[length];
             for (var i = 0; i < length; i++)
             {
-                expected[i] = new Complex(random.NextDouble(), random.NextDouble());
+                values[i] = new Complex(random.NextDouble(), random.NextDouble());
             }
 
-            var actual = expected.ToArray();
+            var expected = values.ToArray();
+            Nayuki.Fft.Transform(expected, false);
+
+            var actual = values.ToArray();
             var fft = new FftFlat.Fft(length);
             fft.ForwardInplace(actual);
-            fft.InverseInplace(actual);
 
             for (var i = 0; i < length; i++)
             {
@@ -43,18 +45,20 @@ namespace FftFlatTest
         [TestCase(256)]
         [TestCase(512)]
         [TestCase(1024)]
-        public void Random2(int length)
+        public void Inverse(int length)
         {
             var random = new Random(42);
-            var expected = new Complex[length];
+            var values = new Complex[length];
             for (var i = 0; i < length; i++)
             {
-                expected[i] = new Complex(random.NextDouble() - 0.5, random.NextDouble() - 0.5);
+                values[i] = new Complex(random.NextDouble(), random.NextDouble());
             }
 
-            var actual = expected.ToArray();
+            var expected = values.ToArray();
+            Nayuki.Fft.Transform(expected, true);
+
+            var actual = values.ToArray();
             var fft = new FftFlat.Fft(length);
-            fft.ForwardInplace(actual);
             fft.InverseInplace(actual);
 
             for (var i = 0; i < length; i++)
