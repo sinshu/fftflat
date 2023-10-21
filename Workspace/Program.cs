@@ -9,6 +9,14 @@ static class Program
     {
         var n = 8;
         var fft = new Fft(n);
+
+        var input = new Complex[n];
+        input[0] = 1;
+
+        var output = new Complex[n];
+
+        fft.Forward(input, output);
+
         Console.WriteLine();
     }
 }
