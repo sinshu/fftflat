@@ -8,8 +8,8 @@ namespace FftFlat
         private readonly int length;
         private readonly Complex[] twiddlesForward;
         private readonly Complex[] twiddlesInverse;
-        //private readonly int[] stageRadix;
-        //private readonly int[] stageRemainder;
+        private readonly int[] stageRadix;
+        private readonly int[] stageRemainder;
 
         public Fft(int length)
         {
@@ -22,6 +22,39 @@ namespace FftFlat
                 twiddlesForward[i] = Complex.Exp(new(0.0, -2 * i * Math.PI / length));
                 twiddlesInverse[i] = Complex.Exp(new(0.0, 2 * i * Math.PI / length));
             }
+
+            var stageRadixList = new List<int>();
+            var stageRemainderList = new List<int>();
+            var n = length;
+            var p = 4;
+            do
+            {
+                while (n % p != 0)
+                {
+                    switch (p)
+                    {
+                        case 4:
+                            p = 2;
+                            break;
+                        case 2:
+                            p = 3;
+                            break;
+                        default:
+                            p += 2;
+                            break;
+                    }
+                    if (p * p > n)
+                    {
+                        p = n;
+                    }
+                }
+                n /= p;
+                stageRadixList.Add(p);
+                stageRemainderList.Add(n);
+            }
+            while (n > 1);
+            stageRadix = stageRadixList.ToArray();
+            stageRemainder = stageRemainderList.ToArray();
         }
 
         public void ForwardInplace(Span<Complex> values)
@@ -97,5 +130,7 @@ namespace FftFlat
 
         internal ReadOnlySpan<Complex> TwiddlesForward => twiddlesForward;
         internal ReadOnlySpan<Complex> TwiddlesInverse => twiddlesInverse;
+        internal ReadOnlySpan<int> StageRadix => stageRadix;
+        internal ReadOnlySpan<int> StageRemainder => stageRemainder;
     }
 }

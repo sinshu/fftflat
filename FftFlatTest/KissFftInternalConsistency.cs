@@ -876,6 +876,39 @@ namespace FftFlatTest
             }
         }
 
+        [TestCase(8)]
+        [TestCase(9)]
+        [TestCase(10)]
+        [TestCase(11)]
+        [TestCase(12)]
+        [TestCase(13)]
+        [TestCase(14)]
+        [TestCase(15)]
+        [TestCase(16)]
+        [TestCase(32)]
+        [TestCase(50)]
+        [TestCase(64)]
+        [TestCase(100)]
+        public void StageRadixAndRemainder(int length)
+        {
+            var info = internalInfos[length];
+
+            var fft = new FftFlat.Fft(length);
+
+            Assert.That(fft.StageRadix.Length == info.StageRadix.Length);
+            Assert.That(fft.StageRemainder.Length == info.StageRemainder.Length);
+
+            for (var i = 0; i < fft.StageRadix.Length; i++)
+            {
+                Assert.That(fft.StageRadix[i] == info.StageRadix[i]);
+            }
+
+            for (var i = 0; i < fft.StageRemainder.Length; i++)
+            {
+                Assert.That(fft.StageRemainder[i] == info.StageRemainder[i]);
+            }
+        }
+
 
 
         private class KissFftInternalInfo
