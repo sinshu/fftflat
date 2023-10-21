@@ -17,12 +17,10 @@ namespace FftFlat
 
             twiddlesForward = new Complex[length];
             twiddlesInverse = new Complex[length];
-            var phincForward = -2 * Math.PI / length;
-            var phincInverse = 2 * Math.PI / length;
             for (var i = 0; i < length; ++i)
             {
-                twiddlesForward[i] = Complex.Exp(new(0.0, i * phincForward));
-                twiddlesInverse[i] = Complex.Exp(new(0.0, i * phincInverse));
+                twiddlesForward[i] = Complex.Exp(new(0.0, -2 * i * Math.PI / length));
+                twiddlesInverse[i] = Complex.Exp(new(0.0, 2 * i * Math.PI / length));
             }
         }
 
