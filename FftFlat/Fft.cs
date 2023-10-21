@@ -5,11 +5,25 @@ namespace FftFlat
 {
     public sealed class Fft
     {
-        private int length;
+        private readonly int length;
+        private readonly Complex[] twiddlesForward;
+        private readonly Complex[] twiddlesInverse;
+        //private readonly int[] stageRadix;
+        //private readonly int[] stageRemainder;
 
         public Fft(int length)
         {
             this.length = length;
+
+            twiddlesForward = new Complex[length];
+            twiddlesInverse = new Complex[length];
+            var phincForward = -2 * Math.PI / length;
+            var phincInverse = 2 * Math.PI / length;
+            for (var i = 0; i < length; ++i)
+            {
+                twiddlesForward[i] = Complex.Exp(new(0.0, i * phincForward));
+                twiddlesInverse[i] = Complex.Exp(new(0.0, i * phincInverse));
+            }
         }
 
         public void ForwardInplace(Span<Complex> values)
@@ -82,5 +96,8 @@ namespace FftFlat
         }
 
         public int Length => length;
+
+        internal ReadOnlySpan<Complex> TwiddlesForward => twiddlesForward;
+        internal ReadOnlySpan<Complex> TwiddlesInverse => twiddlesInverse;
     }
 }
