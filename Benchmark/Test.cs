@@ -48,5 +48,12 @@ namespace Benchmark
                 values_mathNet,
                 global::MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
         }
+
+        [Benchmark]
+        public void Nayuki()
+        {
+            global::Nayuki.Fft.Transform(values_fftSharp, false);
+            global::Nayuki.Fft.Transform(values_fftSharp, true);
+        }
     }
 }
