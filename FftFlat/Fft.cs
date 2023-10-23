@@ -146,14 +146,14 @@ namespace FftFlat
                     Sub2(twiddles, dstSlice, stride, m);
                     break;
                 case 4:
-                    Sub4(twiddles, dstSlice, inverse, stride, m);
+                    Sub4(twiddles, dstSlice, stride, m, inverse);
                     break;
                 default:
                     throw new NotImplementedException("Arbitrary length FFT is not yet implemented.");
             }
         }
 
-        private static void Sub2(Span<Complex> twiddles, Span<Complex> dst, int stride, int m)
+        private static void Sub2(ReadOnlySpan<Complex> twiddles, Span<Complex> dst, int stride, int m)
         {
             for (var i = 0; i < m; i++)
             {
@@ -163,9 +163,9 @@ namespace FftFlat
             }
         }
 
-        private static void Sub4(Span<Complex> twiddles, Span<Complex> dst, bool inverse, int stride, int m)
+        private static void Sub4(ReadOnlySpan<Complex> twiddles, Span<Complex> dst, int stride, int m, bool inverse)
         {
-            Span<Complex> scratch = stackalloc Complex[7];
+            Span<Complex> scratch = stackalloc Complex[6];
 
             for (var i = 0; i < m; i++)
             {

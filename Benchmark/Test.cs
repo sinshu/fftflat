@@ -7,10 +7,12 @@ namespace Benchmark
     [MemoryDiagnoser]
     public class Test
     {
-        private Complex[] values_fftFlat;
-        private Complex[] values_fftSharp;
-        private Complex[] values_mathNet;
+        private Complex[] values_FftFlat;
+        private Complex[] values_FftSharp;
+        private Complex[] values_MathNet;
+        private Complex[] values_Nayuki;
         private FftFlat.Fft fft;
+        private StreamWriter log;
 
         [Params(256, 1024, 4096)]
         public int Length;
@@ -18,42 +20,72 @@ namespace Benchmark
         [GlobalSetup]
         public void Setup()
         {
-            values_fftFlat = DummyData.Create(Length);
-            values_fftSharp = DummyData.Create(Length);
-            values_mathNet = DummyData.Create(Length);
+            values_FftFlat = DummyData.Create(Length);
+            values_FftSharp = DummyData.Create(Length);
+            values_MathNet = DummyData.Create(Length);
+            values_Nayuki = DummyData.Create(Length);
             fft = new FftFlat.Fft(Length);
+
+            var dir = Directory.GetCurrentDirectory();
+            while (!Directory.GetParent(dir).EnumerateDirectories().Any(d => d.Name == "Benchmark"))
+            {
+                dir = Directory.GetParent(dir).FullName;
+            }
+            var logPath = Path.Combine(dir, "bin", "log.txt");
+            log = new StreamWriter(logPath);
+            log.WriteLine("=== BEFORE ===");
+            log.WriteLine("FftFlat: " + GetMaxValue(values_FftFlat));
+            log.WriteLine("FftSharp: " + GetMaxValue(values_FftSharp));
+            log.WriteLine("MathNet: " + GetMaxValue(values_MathNet));
+            log.WriteLine("Nayuki: " + GetMaxValue(values_Nayuki));
+        }
+
+        [GlobalCleanup]
+        public void Cleanup()
+        {
+            log.WriteLine("=== AFTER ===");
+            log.WriteLine("FftFlat: " + GetMaxValue(values_FftFlat));
+            log.WriteLine("FftSharp: " + GetMaxValue(values_FftSharp));
+            log.WriteLine("MathNet: " + GetMaxValue(values_MathNet));
+            log.WriteLine("Nayuki: " + GetMaxValue(values_Nayuki));
+            log.Dispose();
+        }
+
+        private static double GetMaxValue(Complex[] data)
+        {
+            return data.Select(x => Math.Max(Math.Abs(x.Real), Math.Abs(x.Imaginary))).Max();
         }
 
         [Benchmark]
         public void FftFlat()
         {
-            fft.ForwardInplace(values_fftFlat);
-            fft.InverseInplace(values_fftFlat);
+            fft.ForwardInplace(values_FftFlat);
+            fft.InverseInplace(values_FftFlat);
         }
 
         [Benchmark]
         public void FftSharp()
         {
-            global::FftSharp.FFT.Forward(values_fftSharp);
-            global::FftSharp.FFT.Inverse(values_fftSharp);
+            global::FftSharp.FFT.Forward(values_FftSharp);
+            global::FftSharp.FFT.Inverse(values_FftSharp);
         }
 
         [Benchmark]
         public void MathNet()
         {
             global::MathNet.Numerics.IntegralTransforms.Fourier.Forward(
-                values_mathNet,
+                values_MathNet,
                 global::MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
             global::MathNet.Numerics.IntegralTransforms.Fourier.Inverse(
-                values_mathNet,
+                values_MathNet,
                 global::MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
         }
 
         [Benchmark]
         public void Nayuki()
         {
-            global::Nayuki.Fft.Transform(values_fftSharp, false);
-            global::Nayuki.Fft.Transform(values_fftSharp, true);
+            global::Nayuki.Fft.Transform(values_Nayuki, false);
+            global::Nayuki.Fft.Transform(values_Nayuki, true);
         }
     }
 }
