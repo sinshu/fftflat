@@ -83,12 +83,12 @@ namespace FftFlat
             {
                 Transform(values, result, 0, 0, true, 0, 1);
 
-                var vv = MemoryMarshal.Cast<Complex, Vector<double>>(values);
-                var vr = MemoryMarshal.Cast<Complex, Vector<double>>(result);
+                var src = MemoryMarshal.Cast<Complex, Vector<double>>(values);
+                var dst = MemoryMarshal.Cast<Complex, Vector<double>>(result);
                 var count = 0;
-                for (var i = 0; i < vv.Length; i++)
+                for (var i = 0; i < src.Length; i++)
                 {
-                    vv[i] = vr[i] * inverseScaling;
+                    src[i] = dst[i] * inverseScaling;
                     count += Vector<double>.Count;
                 }
                 for (var i = count; i < values.Length; i++)
@@ -143,7 +143,7 @@ namespace FftFlat
             switch (p)
             {
                 case 2:
-                    Sub2(twiddles, dstSlice, inverse, stride, m);
+                    Sub2(twiddles, dstSlice, stride, m);
                     break;
                 case 4:
                     Sub4(twiddles, dstSlice, inverse, stride, m);
@@ -153,12 +153,12 @@ namespace FftFlat
             }
         }
 
-        private static void Sub2(Span<Complex> twiddles, Span<Complex> dst, bool inverse, int stride, int count)
+        private static void Sub2(Span<Complex> twiddles, Span<Complex> dst, int stride, int m)
         {
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < m; i++)
             {
-                var t = dst[count + i] * twiddles[i * stride];
-                dst[count + i] = dst[i] - t;
+                var t = dst[m + i] * twiddles[i * stride];
+                dst[m + i] = dst[i] - t;
                 dst[i] += t;
             }
         }
