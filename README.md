@@ -43,3 +43,9 @@ The following is a benchmark comparing this with other pure C# FFT implementatio
 * ⬜ Cosine transform
 * ⬜ Speedup via multithreading
 * ⬜ Speedup via SIMD
+
+
+
+# License
+
+FftFlat is available under the [BSD 3-Clause license](LICENSE.txt).
