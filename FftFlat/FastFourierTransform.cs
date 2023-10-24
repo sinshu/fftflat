@@ -16,6 +16,11 @@ namespace FftFlat
 
         public FastFourierTransform(int length)
         {
+            if (length <= 0)
+            {
+                throw new ArgumentException("Length must be a positive value.", nameof(length));
+            }
+
             this.length = length;
 
             twiddlesForward = new Complex[length];
@@ -64,6 +69,11 @@ namespace FftFlat
 
         public void ForwardInplace(Span<Complex> values)
         {
+            if (values.Length != length)
+            {
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(values));
+            }
+
             var result = ArrayPool<Complex>.Shared.Rent(length);
             try
             {
@@ -78,6 +88,11 @@ namespace FftFlat
 
         public void InverseInplace(Span<Complex> values)
         {
+            if (values.Length != length)
+            {
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(values));
+            }
+
             var result = ArrayPool<Complex>.Shared.Rent(length);
             try
             {
@@ -105,11 +120,53 @@ namespace FftFlat
 
         public void Forward(ReadOnlySpan<Complex> source, Span<Complex> destination)
         {
+            if (source.Length != length)
+            {
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(source));
+            }
+
+            if (destination.Length != length)
+            {
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(destination));
+            }
+
+            if (source.Overlaps(destination))
+            {
+                if (source == destination)
+                {
+                    ForwardInplace(destination);
+                    return;
+                }
+
+                throw new ArgumentException("The source and destination spans must be either the same or non-overlapping.");
+            }
+
             Transform(source, destination, 0, 0, false, 0, 1);
         }
 
         public void Inverse(ReadOnlySpan<Complex> source, Span<Complex> destination)
         {
+            if (source.Length != length)
+            {
+                throw new ArgumentException("The length of the source span must match the FFT length.");
+            }
+
+            if (destination.Length != length)
+            {
+                throw new ArgumentException("The length of the source span must match the FFT length.");
+            }
+
+            if (source.Overlaps(destination))
+            {
+                if (source == destination)
+                {
+                    InverseInplace(destination);
+                    return;
+                }
+
+                throw new ArgumentException("The source and destination spans must be either the same or non-overlapping.");
+            }
+
             Transform(source, destination, 0, 0, true, 0, 1);
 
             // Scaling after IFFT.
