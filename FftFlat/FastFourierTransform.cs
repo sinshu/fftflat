@@ -5,6 +5,9 @@ using System.Runtime.InteropServices;
 
 namespace FftFlat
 {
+    /// <summary>
+    /// Performs fast Fourier transform (FFT).
+    /// </summary>
     public sealed class FastFourierTransform
     {
         private readonly int length;
@@ -14,6 +17,13 @@ namespace FftFlat
         private readonly int[] stageRemainder;
         private readonly double inverseScaling;
 
+        /// <summary>
+        /// Initializes the FFT with the given length.
+        /// </summary>
+        /// <param name="length">The length of the FFT.</param>
+        /// <remarks>
+        /// The length must be a power of two.
+        /// </remarks>
         public FastFourierTransform(int length)
         {
             if (length <= 0)
@@ -64,21 +74,33 @@ namespace FftFlat
             stageRadix = stageRadixList.ToArray();
             stageRemainder = stageRemainderList.ToArray();
 
+            foreach (var value in stageRadix)
+            {
+                if (value != 2 && value != 4)
+                {
+                    throw new NotImplementedException("The length must be a power of two. Arbitrary length FFT is not yet implemented.");
+                }
+            }
+
             inverseScaling = 1.0 / length;
         }
 
-        public void ForwardInplace(Span<Complex> values)
+        /// <summary>
+        /// Performs FFT in-place.
+        /// </summary>
+        /// <param name="signal">The signal to be transformed.</param>
+        public void ForwardInplace(Span<Complex> signal)
         {
-            if (values.Length != length)
+            if (signal.Length != length)
             {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(values));
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(signal));
             }
 
             var result = ArrayPool<Complex>.Shared.Rent(length);
             try
             {
-                Transform(values, result, 0, 0, false, 0, 1);
-                result.AsSpan(0, length).CopyTo(values);
+                Transform(signal, result, 0, 0, false, 0, 1);
+                result.AsSpan(0, length).CopyTo(signal);
             }
             finally
             {
@@ -86,20 +108,24 @@ namespace FftFlat
             }
         }
 
-        public void InverseInplace(Span<Complex> values)
+        /// <summary>
+        /// Performs inverse FFT in-place.
+        /// </summary>
+        /// <param name="signal">The signal to be transformed.</param>
+        public void InverseInplace(Span<Complex> signal)
         {
-            if (values.Length != length)
+            if (signal.Length != length)
             {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(values));
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(signal));
             }
 
             var result = ArrayPool<Complex>.Shared.Rent(length);
             try
             {
-                Transform(values, result, 0, 0, true, 0, 1);
+                Transform(signal, result, 0, 0, true, 0, 1);
 
                 // Scaling after IFFT.
-                var src = MemoryMarshal.Cast<Complex, Vector<double>>(values);
+                var src = MemoryMarshal.Cast<Complex, Vector<double>>(signal);
                 var dst = MemoryMarshal.Cast<Complex, Vector<double>>(result);
                 var count = 0;
                 for (var i = 0; i < src.Length; i++)
@@ -107,9 +133,9 @@ namespace FftFlat
                     src[i] = dst[i] * inverseScaling;
                     count += Vector<double>.Count;
                 }
-                for (var i = count; i < values.Length; i++)
+                for (var i = count; i < signal.Length; i++)
                 {
-                    values[i] *= inverseScaling;
+                    signal[i] *= inverseScaling;
                 }
             }
             finally
@@ -118,6 +144,11 @@ namespace FftFlat
             }
         }
 
+        /// <summary>
+        /// Performs FFT.
+        /// </summary>
+        /// <param name="source">The signal to be transformed.</param>
+        /// <param name="destination">The destination to store the transformed signal.</param>
         public void Forward(ReadOnlySpan<Complex> source, Span<Complex> destination)
         {
             if (source.Length != length)
@@ -144,6 +175,11 @@ namespace FftFlat
             Transform(source, destination, 0, 0, false, 0, 1);
         }
 
+        /// <summary>
+        /// Performs inverse FFT.
+        /// </summary>
+        /// <param name="source">The signal to be transformed.</param>
+        /// <param name="destination">The destination to store the transformed signal.</param>
         public void Inverse(ReadOnlySpan<Complex> source, Span<Complex> destination)
         {
             if (source.Length != length)
@@ -225,7 +261,7 @@ namespace FftFlat
                     Sub4(twiddles, dstSlice, stride, m, inverse);
                     break;
                 default:
-                    throw new NotImplementedException("Arbitrary length FFT is not yet implemented.");
+                    throw new NotImplementedException("The length must be a power of two. Arbitrary length FFT is not yet implemented.");
             }
         }
 
@@ -269,8 +305,12 @@ namespace FftFlat
             }
         }
 
+        /// <summary>
+        /// The length of the FFT.
+        /// </summary>
         public int Length => length;
 
+        // Internally exposed for testing.
         internal ReadOnlySpan<Complex> TwiddlesForward => twiddlesForward;
         internal ReadOnlySpan<Complex> TwiddlesInverse => twiddlesInverse;
         internal ReadOnlySpan<int> StageRadix => stageRadix;
