@@ -1,9 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Version>0.1.0</Version>
+    <Authors>Nobuaki Tanaka</Authors>
+    <Description>A reasonably fast FFT implementation in pure C#</Description>
+    <PackageProjectUrl>https://github.com/sinshu/fftflat</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sinshu/fftflat</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>fft</PackageTags>
+    <PackageReleaseNotes>https://github.com/sinshu/fftflat/blob/main/CHANGELOG.md</PackageReleaseNotes>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>
