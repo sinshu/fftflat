@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace FftFlat
 {
-    public sealed class Fft
+    public sealed class FastFourierTransform
     {
         private readonly int length;
         private readonly Complex[] twiddlesForward;
@@ -14,7 +14,7 @@ namespace FftFlat
         private readonly int[] stageRemainder;
         private readonly double inverseScaling;
 
-        public Fft(int length)
+        public FastFourierTransform(int length)
         {
             this.length = length;
 
@@ -83,6 +83,7 @@ namespace FftFlat
             {
                 Transform(values, result, 0, 0, true, 0, 1);
 
+                // Scaling after IFFT.
                 var src = MemoryMarshal.Cast<Complex, Vector<double>>(values);
                 var dst = MemoryMarshal.Cast<Complex, Vector<double>>(result);
                 var count = 0;
@@ -93,7 +94,7 @@ namespace FftFlat
                 }
                 for (var i = count; i < values.Length; i++)
                 {
-                    values[i] = result[i] * inverseScaling;
+                    values[i] *= inverseScaling;
                 }
             }
             finally
@@ -105,6 +106,24 @@ namespace FftFlat
         public void Forward(ReadOnlySpan<Complex> source, Span<Complex> destination)
         {
             Transform(source, destination, 0, 0, false, 0, 1);
+        }
+
+        public void Inverse(ReadOnlySpan<Complex> source, Span<Complex> destination)
+        {
+            Transform(source, destination, 0, 0, true, 0, 1);
+
+            // Scaling after IFFT.
+            var dst = MemoryMarshal.Cast<Complex, Vector<double>>(destination);
+            var count = 0;
+            for (var i = 0; i < dst.Length; i++)
+            {
+                dst[i] *= inverseScaling;
+                count += Vector<double>.Count;
+            }
+            for (var i = count; i < destination.Length; i++)
+            {
+                destination[i] *= inverseScaling;
+            }
         }
 
         private void Transform(ReadOnlySpan<Complex> src, Span<Complex> dst, int srcStart, int dstStart, bool inverse, int stage, int stride)

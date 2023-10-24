@@ -865,7 +865,7 @@ namespace FftFlatTest
         {
             var info = internalInfos[length];
 
-            var fft = new FftFlat.Fft(length);
+            var fft = new FftFlat.FastFourierTransform(length);
 
             for (var i = 0; i < length; i++)
             {
@@ -893,7 +893,7 @@ namespace FftFlatTest
         {
             var info = internalInfos[length];
 
-            var fft = new FftFlat.Fft(length);
+            var fft = new FftFlat.FastFourierTransform(length);
 
             Assert.That(fft.StageRadix.Length == info.StageRadix.Length);
             Assert.That(fft.StageRemainder.Length == info.StageRemainder.Length);

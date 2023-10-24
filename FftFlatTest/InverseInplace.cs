@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace FftFlatTest
 {
-    public class Inverse
+    public class InverseInplace
     {
         [TestCase(8)]
         [TestCase(16)]
@@ -16,23 +16,22 @@ namespace FftFlatTest
         [TestCase(1024)]
         public void Impulse(int length)
         {
-            var src = Enumerable.Repeat(1.0, length).Select(x => (Complex)x).ToArray();
+            var values = Enumerable.Repeat(1.0, length).Select(x => (Complex)x).ToArray();
 
-            var dst = new Complex[length];
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.Inverse(src, dst);
+            fft.InverseInplace(values);
 
             for (var i = 0; i < length; i++)
             {
                 if (i == 0)
                 {
-                    Assert.That(dst[i].Real, Is.EqualTo(1.0).Within(1.0E-6));
-                    Assert.That(dst[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Real, Is.EqualTo(1.0).Within(1.0E-6));
+                    Assert.That(values[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
                 else
                 {
-                    Assert.That(dst[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(dst[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
             }
         }
@@ -47,19 +46,18 @@ namespace FftFlatTest
         [TestCase(1024, 8)]
         public void Sine(int length, int w)
         {
-            var src = new Complex[length];
-            src[w] = new Complex(0, -length / 2);
-            src[length - w] = new Complex(0, length / 2);
+            var values = new Complex[length];
+            values[w] = new Complex(0, -length / 2);
+            values[length - w] = new Complex(0, length / 2);
 
-            var dst = new Complex[length];
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.Inverse(src, dst);
+            fft.InverseInplace(values);
 
             for (var i = 0; i < length; i++)
             {
                 var expected = Math.Sin(2 * Math.PI * w * i / length);
-                Assert.That(dst[i].Real, Is.EqualTo(expected).Within(1.0E-6));
-                Assert.That(dst[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                Assert.That(values[i].Real, Is.EqualTo(expected).Within(1.0E-6));
+                Assert.That(values[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
             }
         }
 
@@ -73,19 +71,18 @@ namespace FftFlatTest
         [TestCase(1024, 8)]
         public void Cosine(int length, int w)
         {
-            var src = new Complex[length];
-            src[w] = new Complex(length / 2, 0);
-            src[length - w] = new Complex(length / 2, 0);
+            var values = new Complex[length];
+            values[w] = new Complex(length / 2, 0);
+            values[length - w] = new Complex(length / 2, 0);
 
-            var dst = new Complex[length];
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.Inverse(src, dst);
+            fft.InverseInplace(values);
 
             for (var i = 0; i < length; i++)
             {
                 var expected = Math.Cos(2 * Math.PI * w * i / length);
-                Assert.That(dst[i].Real, Is.EqualTo(expected).Within(1.0E-6));
-                Assert.That(dst[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                Assert.That(values[i].Real, Is.EqualTo(expected).Within(1.0E-6));
+                Assert.That(values[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
             }
         }
     }

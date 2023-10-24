@@ -27,7 +27,7 @@ namespace FftFlatTest
             Nayuki.Fft.Transform(expected, false);
 
             var actual = values.ToArray();
-            var fft = new FftFlat.Fft(length);
+            var fft = new FftFlat.FastFourierTransform(length);
             fft.ForwardInplace(actual);
 
             for (var i = 0; i < length; i++)
@@ -58,7 +58,7 @@ namespace FftFlatTest
             Nayuki.Fft.Transform(expected, true);
 
             var actual = values.ToArray();
-            var fft = new FftFlat.Fft(length);
+            var fft = new FftFlat.FastFourierTransform(length);
             fft.InverseInplace(actual);
 
             for (var i = 0; i < length; i++)

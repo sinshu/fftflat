@@ -11,7 +11,7 @@ namespace Benchmark
         private Complex[] values_FftSharp;
         private Complex[] values_MathNet;
         private Complex[] values_Nayuki;
-        private FftFlat.Fft fft;
+        private FftFlat.FastFourierTransform fft;
         private StreamWriter log;
 
         [Params(256, 1024, 4096)]
@@ -24,7 +24,7 @@ namespace Benchmark
             values_FftSharp = DummyData.Create(Length);
             values_MathNet = DummyData.Create(Length);
             values_Nayuki = DummyData.Create(Length);
-            fft = new FftFlat.Fft(Length);
+            fft = new FftFlat.FastFourierTransform(Length);
 
             var dir = Directory.GetCurrentDirectory();
             while (!Directory.GetParent(dir).EnumerateDirectories().Any(d => d.Name == "Benchmark"))

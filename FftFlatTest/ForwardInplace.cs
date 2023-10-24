@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace FftFlatTest
 {
-    public class Forward
+    public class ForwardInplace
     {
         [TestCase(8)]
         [TestCase(16)]
@@ -16,17 +16,16 @@ namespace FftFlatTest
         [TestCase(1024)]
         public void Impulse(int length)
         {
-            var src = new Complex[length];
-            src[0] = 1;
+            var values = new Complex[length];
+            values[0] = 1;
 
-            var dst = new Complex[length];
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.Forward(src, dst);
+            fft.ForwardInplace(values);
 
-            foreach (var actual in dst)
+            foreach (var value in values)
             {
-                Assert.That(actual.Real, Is.EqualTo(1.0).Within(1.0E-6));
-                Assert.That(actual.Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                Assert.That(value.Real, Is.EqualTo(1.0).Within(1.0E-6));
+                Assert.That(value.Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
             }
         }
 
@@ -40,32 +39,31 @@ namespace FftFlatTest
         [TestCase(1024, 8)]
         public void Sine(int length, int w)
         {
-            var src = new Complex[length];
+            var values = new Complex[length];
             for (var i = 0; i < length; i++)
             {
-                src[i] = Math.Sin(2 * Math.PI * w * i / length);
+                values[i] = Math.Sin(2 * Math.PI * w * i / length);
             }
 
-            var dst = new Complex[length];
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.Forward(src, dst);
+            fft.ForwardInplace(values);
 
             for (var i = 0; i < length; i++)
             {
                 if (i == w)
                 {
-                    Assert.That(dst[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(dst[i].Imaginary, Is.EqualTo(-length / 2.0).Within(1.0E-6));
+                    Assert.That(values[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Imaginary, Is.EqualTo(-length / 2.0).Within(1.0E-6));
                 }
                 else if (i == length - w)
                 {
-                    Assert.That(dst[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(dst[i].Imaginary, Is.EqualTo(length / 2.0).Within(1.0E-6));
+                    Assert.That(values[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Imaginary, Is.EqualTo(length / 2.0).Within(1.0E-6));
                 }
                 else
                 {
-                    Assert.That(dst[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(dst[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
             }
         }
@@ -80,32 +78,31 @@ namespace FftFlatTest
         [TestCase(1024, 8)]
         public void Cosine(int length, int w)
         {
-            var src = new Complex[length];
+            var values = new Complex[length];
             for (var i = 0; i < length; i++)
             {
-                src[i] = Math.Cos(2 * Math.PI * w * i / length);
+                values[i] = Math.Cos(2 * Math.PI * w * i / length);
             }
 
-            var dst = new Complex[length];
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.Forward(src, dst);
+            fft.ForwardInplace(values);
 
             for (var i = 0; i < length; i++)
             {
                 if (i == w)
                 {
-                    Assert.That(dst[i].Real, Is.EqualTo(length / 2.0).Within(1.0E-6));
-                    Assert.That(dst[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Real, Is.EqualTo(length / 2.0).Within(1.0E-6));
+                    Assert.That(values[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
                 else if (i == length - w)
                 {
-                    Assert.That(dst[i].Real, Is.EqualTo(length / 2.0).Within(1.0E-6));
-                    Assert.That(dst[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Real, Is.EqualTo(length / 2.0).Within(1.0E-6));
+                    Assert.That(values[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
                 else
                 {
-                    Assert.That(dst[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(dst[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(values[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
             }
         }
