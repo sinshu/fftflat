@@ -5,9 +5,41 @@ This library is a port of [KISS FFT](https://github.com/mborgerding/kissfft), ad
 
 
 
+## Installation
+
+[The NuGet package](https://www.nuget.org/packages/FftFlat) is available:
+
+```ps1
+Install-Package FftFlat
+```
+
+If you don't want to add a DLL, copy [FastFourierTransform.cs](https://github.com/sinshu/fftflat/blob/main/FftFlat/FastFourierTransform.cs) into your project.
+
+
+
+## Example
+
+First, add a using statement for the FftFlat namespace.
+
+```cs
+using FftFlat;
+```
+
+To perform FFT or IFFT, create a FastFourierTransform instance and call the appropriate method.
+
+```cs
+var signal = new Complex[1024];
+signal[0] = 1;
+
+var fft = new FastFourierTransform(1024);
+fft.ForwardInplace(signal);
+```
+
+
+
+## Performance
+
 The following is a benchmark comparing this with other pure C# FFT implementations. In this benchmark, the time taken to perform FFT and IFFT on a random signal was measured. The FFT lengths used were powers of two, ranging from 256 to 8192.
-
-
 
 | Method   | Length | Mean       | Error     | StdDev    | Gen0   | Allocated |
 |--------- |------- |-----------:|----------:|----------:|-------:|----------:|
@@ -29,8 +61,6 @@ The following is a benchmark comparing this with other pure C# FFT implementatio
 | **FftFlat**  | **8192**   | **257.211 μs** | **0.9387 μs** | **0.8781 μs** |      **-** |         **-** |
 | FftSharp | 8192   | 952.966 μs | 1.6605 μs | 1.4720 μs |      - |       1 B |
 | MathNet  | 8192   | 323.204 μs | 0.6870 μs | 0.5737 μs | 3.4180 |   46602 B |
-
-
 
 ![Plot of the table above.](plot.png)
 
