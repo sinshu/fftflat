@@ -17,7 +17,7 @@ If you don't want to add a DLL, copy [FastFourierTransform.cs](https://github.co
 
 
 
-## Example
+## Usage
 
 First, add a using statement for the FftFlat namespace.
 
