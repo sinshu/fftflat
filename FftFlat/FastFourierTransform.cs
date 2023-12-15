@@ -28,6 +28,11 @@ namespace FftFlat
                 throw new ArgumentException("The FFT Length must be greater than or equal to two.", nameof(length));
             }
 
+            if ((length & (length - 1)) != 0)
+            {
+                throw new ArgumentException("The FFT length must be a power of two.", nameof(length));
+            }
+
             this.length = length;
             this.bitReversal = new int[2 + (int)Math.Ceiling(Math.Sqrt(length))];
             this.trigTable = new double[length / 2];
