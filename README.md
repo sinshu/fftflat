@@ -77,4 +77,4 @@ The following is a benchmark comparing this with other pure C# FFT implementatio
 
 ## License
 
-FftFlat is available under [the MIT license](LICENSE.txt).
+FftFlat is available under [the MIT license](LICENSE.md).
