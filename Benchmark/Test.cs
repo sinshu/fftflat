@@ -13,7 +13,7 @@ namespace Benchmark
         private FftFlat.FastFourierTransform fft;
         private StreamWriter log;
 
-        [Params(256, 1024, 4096)]
+        [Params(256, 512, 1024, 2048, 4096, 8192)]
         public int Length;
 
         [GlobalSetup]
