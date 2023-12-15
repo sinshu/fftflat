@@ -422,7 +422,7 @@ namespace FftFlat
             if (nw > 2)
             {
                 nwh = nw >> 1;
-                delta = Math.Atan(1.0) / nwh;
+                delta = (Math.PI / 4) / nwh;
                 w[0] = 1;
                 w[1] = 0;
                 w[nwh] = Math.Cos(delta * nwh);
@@ -453,7 +453,7 @@ namespace FftFlat
             if (nc > 1)
             {
                 nch = nc >> 1;
-                delta = Math.Atan(1.0) / nch;
+                delta = (Math.PI / 4) / nch;
                 c[0] = Math.Cos(delta * nch);
                 c[nch] = 0.5 * c[0];
                 for (j = 1; j < nch; j++)
