@@ -1,7 +1,7 @@
 # FftFlat
 
-The purpose of this library is to provide a reasonably fast FFT implementation, all in pure C#.
-This library is a port of [KISS FFT](https://github.com/mborgerding/kissfft), adapted to work with the .NET Standard complex number type.
+The purpose of this library is to provide a reasonably fast FFT implementation, entirely in pure C#.
+This library is adapted from [General Purpose FFT Package by Ooura](https://www.kurims.kyoto-u.ac.jp/~ooura/fft.html), modified to be compatible with the .NET Standard complex number type.
 
 
 
@@ -19,20 +19,20 @@ If you don't want to add a DLL, copy [FastFourierTransform.cs](https://github.co
 
 ## Usage
 
-First, add a using statement for the FftFlat namespace.
+First, add a `using` statement for the `FftFlat` namespace.
 
 ```cs
 using FftFlat;
 ```
 
-To perform FFT or IFFT, create a FastFourierTransform instance and call the appropriate method.
+To perform FFT or IFFT, create an instance of `FastFourierTransform` and call the appropriate method.
 
 ```cs
-var signal = new Complex[1024];
-signal[0] = 1;
+var samples = new Complex[1024];
+samples[0] = 1;
 
 var fft = new FastFourierTransform(1024);
-fft.ForwardInplace(signal);
+fft.ForwardInplace(samples);
 ```
 
 
@@ -62,20 +62,19 @@ The following is a benchmark comparing this with other pure C# FFT implementatio
 | FftSharp | 8192   | 952.966 μs | 1.6605 μs | 1.4720 μs |      - |       1 B |
 | MathNet  | 8192   | 323.204 μs | 0.6870 μs | 0.5737 μs | 3.4180 |   46602 B |
 
-![Plot of the table above.](plot.png)
+![A graphical plot of the table above.](plot.png)
 
 
 
 ## Todo
 
-* ✅ FFT for powers of two
-* ⬜ FFT for non-powers of two
-* ⬜ Cosine transform
-* ⬜ Speedup via multithreading
-* ⬜ Speedup via SIMD
+* ✅ FFT for power-of-two length samples
+* ⬜ FFT for arbitrary length samples
+* ⬜ Other transformations (such as cosine transform)
+* ⬜ Support for 32-bit floating-point numbers
 
 
 
 ## License
 
-FftFlat is available under the [BSD 3-Clause license](LICENSE.txt).
+FftFlat is available under [the MIT license](LICENSE.txt).
