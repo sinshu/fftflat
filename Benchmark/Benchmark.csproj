@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FftFlat\FftFlat.csproj" />
-    <ProjectReference Include="..\Nayuki\Nayuki.csproj" />
   </ItemGroup>
 
 </Project>

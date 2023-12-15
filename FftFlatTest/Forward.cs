@@ -6,6 +6,8 @@ namespace FftFlatTest
 {
     public class Forward
     {
+        [TestCase(2)]
+        [TestCase(4)]
         [TestCase(8)]
         [TestCase(16)]
         [TestCase(32)]
@@ -30,7 +32,7 @@ namespace FftFlatTest
             }
         }
 
-        [TestCase(8, 1)]
+        [TestCase(8, 3)]
         [TestCase(16, 2)]
         [TestCase(32, 3)]
         [TestCase(64, 4)]
