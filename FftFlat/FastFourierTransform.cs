@@ -34,7 +34,7 @@ namespace FftFlat
             }
 
             this.length = length;
-            this.bitReversal = new int[2 + (int)Math.Ceiling(Math.Sqrt(length))];
+            this.bitReversal = new int[3 + (int)Math.Sqrt(length)];
             this.trigTable = new double[length / 2];
             this.inverseScaling = 1.0 / length;
         }
