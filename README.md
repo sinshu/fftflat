@@ -13,7 +13,7 @@ This library is adapted from [General Purpose FFT Package by Ooura](https://www.
 Install-Package FftFlat
 ```
 
-If you don't want to add a DLL, copy [FastFourierTransform.cs](https://github.com/sinshu/fftflat/blob/main/FftFlat/FastFourierTransform.cs) into your project.
+If you don't want to add a DLL, copy [the .cs files](https://github.com/sinshu/fftflat/tree/main/FftFlat) to your project.
 
 
 
