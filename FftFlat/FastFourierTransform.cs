@@ -42,18 +42,19 @@ namespace FftFlat
         /// <summary>
         /// Performs FFT in-place.
         /// </summary>
-        /// <param name="signal">The signal to be transformed.</param>
-        public unsafe void ForwardInplace(Span<Complex> signal)
+        /// <param name="samples">The samples to be transformed.</param>
+        public unsafe void ForwardInplace(Span<Complex> samples)
         {
-            if (signal.Length != length)
+            if (samples.Length != length)
             {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(signal));
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(samples));
             }
 
-            fixed (Complex* a = signal)
+            fixed (Complex* a = samples)
             fixed (int* ip = bitReversal)
             fixed (double* w = trigTable)
             {
+                // Note that the sign of the imaginary part is inverted In Ooura's FFT.
                 fft4g.cdft(2 * length, -1, (double*)a, ip, w);
             }
         }
@@ -61,25 +62,26 @@ namespace FftFlat
         /// <summary>
         /// Performs inverse FFT in-place.
         /// </summary>
-        /// <param name="signal">The signal to be transformed.</param>
-        public unsafe void InverseInplace(Span<Complex> signal)
+        /// <param name="samples">The samples to be transformed.</param>
+        public unsafe void InverseInplace(Span<Complex> samples)
         {
-            if (signal.Length != length)
+            if (samples.Length != length)
             {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(signal));
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(samples));
             }
 
-            fixed (Complex* a = signal)
+            fixed (Complex* a = samples)
             fixed (int* ip = bitReversal)
             fixed (double* w = trigTable)
             {
+                // Note that the sign of the imaginary part is inverted In Ooura's FFT.
                 fft4g.cdft(2 * length, 1, (double*)a, ip, w);
             }
 
             // Scaling after IFFT.
             if (length >= Vector<double>.Count)
             {
-                var vectors = MemoryMarshal.Cast<Complex, Vector<double>>(signal);
+                var vectors = MemoryMarshal.Cast<Complex, Vector<double>>(samples);
                 for (var i = 0; i < vectors.Length; i++)
                 {
                     vectors[i] *= inverseScaling;
@@ -87,9 +89,9 @@ namespace FftFlat
             }
             else
             {
-                for (var i = 0; i < signal.Length; i++)
+                for (var i = 0; i < samples.Length; i++)
                 {
-                    signal[i] *= inverseScaling;
+                    samples[i] *= inverseScaling;
                 }
             }
         }
@@ -97,8 +99,8 @@ namespace FftFlat
         /// <summary>
         /// Performs FFT.
         /// </summary>
-        /// <param name="source">The signal to be transformed.</param>
-        /// <param name="destination">The destination to store the transformed signal.</param>
+        /// <param name="source">The samples to be transformed.</param>
+        /// <param name="destination">The destination to store the transformed samples.</param>
         public void Forward(ReadOnlySpan<Complex> source, Span<Complex> destination)
         {
             if (source.Length != length)
@@ -118,8 +120,8 @@ namespace FftFlat
         /// <summary>
         /// Performs inverse FFT.
         /// </summary>
-        /// <param name="source">The signal to be transformed.</param>
-        /// <param name="destination">The destination to store the transformed signal.</param>
+        /// <param name="source">The samples to be transformed.</param>
+        /// <param name="destination">The destination to store the transformed samples.</param>
         public void Inverse(ReadOnlySpan<Complex> source, Span<Complex> destination)
         {
             if (source.Length != length)
