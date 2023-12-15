@@ -6,6 +6,8 @@ namespace FftFlatTest
 {
     public class Inverse
     {
+        [TestCase(2)]
+        [TestCase(4)]
         [TestCase(8)]
         [TestCase(16)]
         [TestCase(32)]

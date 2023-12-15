@@ -6,6 +6,8 @@ namespace FftFlatTest
 {
     public class MathNetConsistency
     {
+        [TestCase(2)]
+        [TestCase(4)]
         [TestCase(8)]
         [TestCase(16)]
         [TestCase(32)]
@@ -39,6 +41,8 @@ namespace FftFlatTest
             }
         }
 
+        [TestCase(2)]
+        [TestCase(4)]
         [TestCase(8)]
         [TestCase(16)]
         [TestCase(32)]

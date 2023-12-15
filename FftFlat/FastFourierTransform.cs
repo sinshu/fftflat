@@ -1,41 +1,4 @@
-﻿// This code file is a modification of kissfft.hh from KISS FFT.
-// 
-// BSD 3-Clause License
-// 
-// KISS FFT:
-// Copyright (C) 2003-2010 Mark Borgerding
-// 
-// FftFlat:
-// Copyright (C) 2023 Nobuaki Tanaka
-// 
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
-// 
-// 1. Redistributions of source code must retain the above copyright notice,
-// this list of conditions and the following disclaimer.
-// 
-// 2. Redistributions in binary form must reproduce the above copyright notice,
-// this list of conditions and the following disclaimer in the documentation
-// and/or other materials provided with the distribution.
-// 
-// 3. Neither the name of the copyright holder nor the names of its contributors
-// may be used to endorse or promote products derived from this software without
-// specific prior written permission.
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-using System;
-using System.Buffers;
-using System.Collections.Generic;
+﻿using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
@@ -47,10 +10,8 @@ namespace FftFlat
     public sealed class FastFourierTransform
     {
         private readonly int length;
-        private readonly Complex[] twiddlesForward;
-        private readonly Complex[] twiddlesInverse;
-        private readonly int[] stageRadix;
-        private readonly int[] stageRemainder;
+        private readonly int[] bitReversal;
+        private readonly double[] trigTable;
         private readonly double inverseScaling;
 
         /// <summary>
@@ -62,129 +23,84 @@ namespace FftFlat
         /// </remarks>
         public FastFourierTransform(int length)
         {
-            if (length <= 0)
+            if (length < 2)
             {
-                throw new ArgumentException("Length must be a positive value.", nameof(length));
+                throw new ArgumentException("The FFT Length must be greater than or equal to two.", nameof(length));
+            }
+
+            if ((length & (length - 1)) != 0)
+            {
+                throw new ArgumentException("The FFT length must be a power of two.", nameof(length));
             }
 
             this.length = length;
-
-            twiddlesForward = new Complex[length];
-            twiddlesInverse = new Complex[length];
-            for (var i = 0; i < length; ++i)
-            {
-                twiddlesForward[i] = Complex.Exp(new(0.0, -2 * i * Math.PI / length));
-                twiddlesInverse[i] = Complex.Exp(new(0.0, 2 * i * Math.PI / length));
-            }
-
-            var stageRadixList = new List<int>();
-            var stageRemainderList = new List<int>();
-            var n = length;
-            var p = 4;
-            do
-            {
-                while (n % p != 0)
-                {
-                    switch (p)
-                    {
-                        case 4:
-                            p = 2;
-                            break;
-                        case 2:
-                            p = 3;
-                            break;
-                        default:
-                            p += 2;
-                            break;
-                    }
-                    if (p * p > n)
-                    {
-                        p = n;
-                    }
-                }
-                n /= p;
-                stageRadixList.Add(p);
-                stageRemainderList.Add(n);
-            }
-            while (n > 1);
-            stageRadix = stageRadixList.ToArray();
-            stageRemainder = stageRemainderList.ToArray();
-
-            foreach (var value in stageRadix)
-            {
-                if (value != 2 && value != 4)
-                {
-                    throw new NotImplementedException("The length must be a power of two. Arbitrary length FFT is not yet implemented.");
-                }
-            }
-
-            inverseScaling = 1.0 / length;
+            this.bitReversal = new int[3 + (int)Math.Sqrt(length)];
+            this.trigTable = new double[length / 2];
+            this.inverseScaling = 1.0 / length;
         }
 
         /// <summary>
         /// Performs FFT in-place.
         /// </summary>
-        /// <param name="signal">The signal to be transformed.</param>
-        public void ForwardInplace(Span<Complex> signal)
+        /// <param name="samples">The samples to be transformed.</param>
+        public unsafe void ForwardInplace(Span<Complex> samples)
         {
-            if (signal.Length != length)
+            if (samples.Length != length)
             {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(signal));
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(samples));
             }
 
-            var result = ArrayPool<Complex>.Shared.Rent(length);
-            try
+            fixed (Complex* a = samples)
+            fixed (int* ip = bitReversal)
+            fixed (double* w = trigTable)
             {
-                Transform(signal, result, 0, 0, false, 0, 1);
-                result.AsSpan(0, length).CopyTo(signal);
-            }
-            finally
-            {
-                ArrayPool<Complex>.Shared.Return(result);
+                // Note that the sign of the imaginary part is inverted In Ooura's FFT.
+                fft4g.cdft(2 * length, -1, (double*)a, ip, w);
             }
         }
 
         /// <summary>
         /// Performs inverse FFT in-place.
         /// </summary>
-        /// <param name="signal">The signal to be transformed.</param>
-        public void InverseInplace(Span<Complex> signal)
+        /// <param name="samples">The samples to be transformed.</param>
+        public unsafe void InverseInplace(Span<Complex> samples)
         {
-            if (signal.Length != length)
+            if (samples.Length != length)
             {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(signal));
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(samples));
             }
 
-            var result = ArrayPool<Complex>.Shared.Rent(length);
-            try
+            fixed (Complex* a = samples)
+            fixed (int* ip = bitReversal)
+            fixed (double* w = trigTable)
             {
-                Transform(signal, result, 0, 0, true, 0, 1);
+                // Note that the sign of the imaginary part is inverted In Ooura's FFT.
+                fft4g.cdft(2 * length, 1, (double*)a, ip, w);
+            }
 
-                // Scaling after IFFT.
-                var src = MemoryMarshal.Cast<Complex, Vector<double>>(signal);
-                var dst = MemoryMarshal.Cast<Complex, Vector<double>>(result);
-                var count = 0;
-                for (var i = 0; i < src.Length; i++)
+            // Scaling after IFFT.
+            if (length >= Vector<double>.Count)
+            {
+                var vectors = MemoryMarshal.Cast<Complex, Vector<double>>(samples);
+                for (var i = 0; i < vectors.Length; i++)
                 {
-                    src[i] = dst[i] * inverseScaling;
-                    count += Vector<double>.Count;
-                }
-                for (var i = count; i < signal.Length; i++)
-                {
-                    signal[i] *= inverseScaling;
+                    vectors[i] *= inverseScaling;
                 }
             }
-            finally
+            else
             {
-                ArrayPool<Complex>.Shared.Return(result);
+                for (var i = 0; i < samples.Length; i++)
+                {
+                    samples[i] *= inverseScaling;
+                }
             }
         }
 
         /// <summary>
         /// Performs FFT.
         /// </summary>
-        /// <param name="source">The signal to be transformed.</param>
-        /// <param name="destination">The destination to store the transformed signal.</param>
+        /// <param name="source">The samples to be transformed.</param>
+        /// <param name="destination">The destination to store the transformed samples.</param>
         public void Forward(ReadOnlySpan<Complex> source, Span<Complex> destination)
         {
             if (source.Length != length)
@@ -197,159 +113,34 @@ namespace FftFlat
                 throw new ArgumentException("The length of the span must match the FFT length.", nameof(destination));
             }
 
-            if (source.Overlaps(destination))
-            {
-                if (source == destination)
-                {
-                    ForwardInplace(destination);
-                    return;
-                }
-
-                throw new ArgumentException("The source and destination spans must be either the same or non-overlapping.");
-            }
-
-            Transform(source, destination, 0, 0, false, 0, 1);
+            source.CopyTo(destination);
+            ForwardInplace(destination);
         }
 
         /// <summary>
         /// Performs inverse FFT.
         /// </summary>
-        /// <param name="source">The signal to be transformed.</param>
-        /// <param name="destination">The destination to store the transformed signal.</param>
+        /// <param name="source">The samples to be transformed.</param>
+        /// <param name="destination">The destination to store the transformed samples.</param>
         public void Inverse(ReadOnlySpan<Complex> source, Span<Complex> destination)
         {
             if (source.Length != length)
             {
-                throw new ArgumentException("The length of the source span must match the FFT length.");
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(source));
             }
 
             if (destination.Length != length)
             {
-                throw new ArgumentException("The length of the source span must match the FFT length.");
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(destination));
             }
 
-            if (source.Overlaps(destination))
-            {
-                if (source == destination)
-                {
-                    InverseInplace(destination);
-                    return;
-                }
-
-                throw new ArgumentException("The source and destination spans must be either the same or non-overlapping.");
-            }
-
-            Transform(source, destination, 0, 0, true, 0, 1);
-
-            // Scaling after IFFT.
-            var dst = MemoryMarshal.Cast<Complex, Vector<double>>(destination);
-            var count = 0;
-            for (var i = 0; i < dst.Length; i++)
-            {
-                dst[i] *= inverseScaling;
-                count += Vector<double>.Count;
-            }
-            for (var i = count; i < destination.Length; i++)
-            {
-                destination[i] *= inverseScaling;
-            }
-        }
-
-        private void Transform(ReadOnlySpan<Complex> src, Span<Complex> dst, int srcStart, int dstStart, bool inverse, int stage, int stride)
-        {
-            var p = stageRadix[stage];
-            var m = stageRemainder[stage];
-
-            var dstCount = p * m;
-            var dstIndex = dstStart;
-            var dstEnd = dstStart + dstCount;
-
-            if (m == 1)
-            {
-                do
-                {
-                    dst[dstIndex] = src[srcStart];
-                    srcStart += stride;
-                    dstIndex++;
-                }
-                while (dstIndex != dstEnd);
-            }
-            else
-            {
-                do
-                {
-                    Transform(src, dst, srcStart, dstIndex, inverse, stage + 1, stride * p);
-                    srcStart += stride;
-                    dstIndex += m;
-                }
-                while (dstIndex != dstEnd);
-            }
-
-            var dstSlice = dst.Slice(dstStart, dstCount);
-            var twiddles = inverse ? twiddlesInverse : twiddlesForward;
-
-            switch (p)
-            {
-                case 2:
-                    Sub2(twiddles, dstSlice, stride, m);
-                    break;
-                case 4:
-                    Sub4(twiddles, dstSlice, stride, m, inverse);
-                    break;
-                default:
-                    throw new NotImplementedException("The length must be a power of two. Arbitrary length FFT is not yet implemented.");
-            }
-        }
-
-        private static void Sub2(ReadOnlySpan<Complex> twiddles, Span<Complex> dst, int stride, int m)
-        {
-            for (var i = 0; i < m; i++)
-            {
-                var t = dst[m + i] * twiddles[i * stride];
-                dst[m + i] = dst[i] - t;
-                dst[i] += t;
-            }
-        }
-
-        private static void Sub4(ReadOnlySpan<Complex> twiddles, Span<Complex> dst, int stride, int m, bool inverse)
-        {
-            Span<Complex> scratch = stackalloc Complex[6];
-
-            for (var i = 0; i < m; i++)
-            {
-                scratch[0] = dst[i + m] * twiddles[i * stride];
-                scratch[1] = dst[i + 2 * m] * twiddles[i * stride * 2];
-                scratch[2] = dst[i + 3 * m] * twiddles[i * stride * 3];
-                scratch[5] = dst[i] - scratch[1];
-
-                dst[i] += scratch[1];
-                scratch[3] = scratch[0] + scratch[2];
-                scratch[4] = scratch[0] - scratch[2];
-                if (inverse)
-                {
-                    scratch[4] = new(-scratch[4].Imaginary, scratch[4].Real);
-                }
-                else
-                {
-                    scratch[4] = new(scratch[4].Imaginary, -scratch[4].Real);
-                }
-
-                dst[i + 2 * m] = dst[i] - scratch[3];
-                dst[i] += scratch[3];
-                dst[i + m] = scratch[5] + scratch[4];
-                dst[i + 3 * m] = scratch[5] - scratch[4];
-            }
+            source.CopyTo(destination);
+            InverseInplace(destination);
         }
 
         /// <summary>
         /// The length of the FFT.
         /// </summary>
         public int Length => length;
-
-        // Internally exposed for testing.
-        internal ReadOnlySpan<Complex> TwiddlesForward => twiddlesForward;
-        internal ReadOnlySpan<Complex> TwiddlesInverse => twiddlesInverse;
-        internal ReadOnlySpan<int> StageRadix => stageRadix;
-        internal ReadOnlySpan<int> StageRemainder => stageRemainder;
     }
 }

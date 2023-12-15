@@ -10,11 +10,10 @@ namespace Benchmark
         private Complex[] values_FftFlat;
         private Complex[] values_FftSharp;
         private Complex[] values_MathNet;
-        private Complex[] values_Nayuki;
         private FftFlat.FastFourierTransform fft;
         private StreamWriter log;
 
-        [Params(256, 1024, 4096)]
+        [Params(256, 512, 1024, 2048, 4096, 8192)]
         public int Length;
 
         [GlobalSetup]
@@ -23,7 +22,6 @@ namespace Benchmark
             values_FftFlat = DummyData.Create(Length);
             values_FftSharp = DummyData.Create(Length);
             values_MathNet = DummyData.Create(Length);
-            values_Nayuki = DummyData.Create(Length);
             fft = new FftFlat.FastFourierTransform(Length);
 
             var dir = Directory.GetCurrentDirectory();
@@ -37,7 +35,6 @@ namespace Benchmark
             log.WriteLine("FftFlat: " + GetMaxValue(values_FftFlat));
             log.WriteLine("FftSharp: " + GetMaxValue(values_FftSharp));
             log.WriteLine("MathNet: " + GetMaxValue(values_MathNet));
-            log.WriteLine("Nayuki: " + GetMaxValue(values_Nayuki));
         }
 
         [GlobalCleanup]
@@ -47,7 +44,6 @@ namespace Benchmark
             log.WriteLine("FftFlat: " + GetMaxValue(values_FftFlat));
             log.WriteLine("FftSharp: " + GetMaxValue(values_FftSharp));
             log.WriteLine("MathNet: " + GetMaxValue(values_MathNet));
-            log.WriteLine("Nayuki: " + GetMaxValue(values_Nayuki));
             log.Dispose();
         }
 
@@ -79,13 +75,6 @@ namespace Benchmark
             global::MathNet.Numerics.IntegralTransforms.Fourier.Inverse(
                 values_MathNet,
                 global::MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
-        }
-
-        [Benchmark]
-        public void Nayuki()
-        {
-            global::Nayuki.Fft.Transform(values_Nayuki, false);
-            global::Nayuki.Fft.Transform(values_Nayuki, true);
         }
     }
 }
