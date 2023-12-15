@@ -9,9 +9,9 @@ Please refer to this package when you modify this code.
 The original code is available here:
 https://www.kurims.kyoto-u.ac.jp/~ooura/fft.html
 
-FftSharp modifies and utilizes fft4g.c from Ooura's FFT package.
+FftFlat modifies and utilizes fft4g.c from Ooura's FFT package.
 
-# FftSharp
+# FftFlat
 
 MIT License
 
