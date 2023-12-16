@@ -5,6 +5,13 @@ This library is adapted from [General Purpose FFT Package by Ooura](https://www.
 
 
 
+# Features
+
+* __Fast:__ Twice as fast as the managed FFT implementation in Math.NET Numerics.
+* __Lightweight:__ Small code size, with no dependencies other than .NET Standard.
+
+
+
 ## Installation
 
 [The NuGet package](https://www.nuget.org/packages/FftFlat) is available:
@@ -34,6 +41,10 @@ samples[0] = 1;
 var fft = new FastFourierTransform(1024);
 fft.ForwardInplace(samples);
 ```
+
+Normalization is only done during the IFFT. This is similar to using `FourierOptions.AsymmetricScaling` for FFT in Math.NET Numerics.
+
+Note that the FastFourierTransform object is not thread-safe. If performing FFT across multiple threads, ensure a separate instance is provided for each thread.
 
 
 
