@@ -48,6 +48,16 @@ Note that the `FastFourierTransform` object is not thread-safe. If performing FF
 
 
 
+# Demo
+
+In this demo video, the spectrum is visualized in real-time as sound is played using `AudioStream` of [RayLib-CsLo](https://github.com/NotNotTech/Raylib-CsLo).
+
+https://www.youtube.com/watch?v=KTpG_z_ejZ0  
+
+[![Demo video](https://img.youtube.com/vi/KTpG_z_ejZ0/0.jpg)](https://www.youtube.com/watch?v=KTpG_z_ejZ0)
+
+
+
 ## Performance
 
 The following is a benchmark comparing this with other pure C# FFT implementations. In this benchmark, the time taken to perform FFT and IFFT on a random signal was measured. The FFT lengths used were powers of two, ranging from 256 to 8192.
