@@ -2,9 +2,9 @@
 
 namespace FftFlat
 {
-    internal static unsafe class fft4g
+    internal static class fft4g
     {
-        internal static void cdft(int n, int isgn, double* a, int* ip, double* w)
+        internal static void cdft(int n, int isgn, Pointer<double> a, Pointer<int> ip, Pointer<double> w)
         {
             if (n > (ip[0] << 2))
             {
@@ -30,7 +30,7 @@ namespace FftFlat
         }
 
 
-        internal static void rdft(int n, int isgn, double* a, int* ip, double* w)
+        internal static void rdft(int n, int isgn, Pointer<double> a, Pointer<int> ip, Pointer<double> w)
         {
             int nw, nc;
             double xi;
@@ -81,7 +81,7 @@ namespace FftFlat
         }
 
 
-        internal static void ddct(int n, int isgn, double* a, int* ip, double* w)
+        internal static void ddct(int n, int isgn, Pointer<double> a, Pointer<int> ip, Pointer<double> w)
         {
             int j, nw, nc;
             double xr;
@@ -144,7 +144,7 @@ namespace FftFlat
         }
 
 
-        internal static void ddst(int n, int isgn, double* a, int* ip, double* w)
+        internal static void ddst(int n, int isgn, Pointer<double> a, Pointer<int> ip, Pointer<double> w)
         {
             int j, nw, nc;
             double xr;
@@ -207,7 +207,7 @@ namespace FftFlat
         }
 
 
-        internal static void dfct(int n, double* a, double* t, int* ip, double* w)
+        internal static void dfct(int n, Pointer<double> a, Pointer<double> t, Pointer<int> ip, Pointer<double> w)
         {
             int j, k, l, m, mh, nw, nc;
             double xr, xi, yr, yi;
@@ -313,7 +313,7 @@ namespace FftFlat
         }
 
 
-        internal static void dfst(int n, double* a, double* t, int* ip, double* w)
+        internal static void dfst(int n, Pointer<double> a, Pointer<double> t, Pointer<int> ip, Pointer<double> w)
         {
             int j, k, l, m, mh, nw, nc;
             double xr, xi, yr, yi;
@@ -412,7 +412,7 @@ namespace FftFlat
 
 
 
-        internal static void makewt(int nw, int* ip, double* w)
+        internal static void makewt(int nw, Pointer<int> ip, Pointer<double> w)
         {
             int j, nwh;
             double delta, x, y;
@@ -444,7 +444,7 @@ namespace FftFlat
         }
 
 
-        internal static void makect(int nc, int* ip, double* c)
+        internal static void makect(int nc, Pointer<int> ip, Pointer<double> c)
         {
             int j, nch;
             double delta;
@@ -468,7 +468,7 @@ namespace FftFlat
         /* -------- child routines -------- */
 
 
-        internal static void bitrv2(int n, int* ip, double* a)
+        internal static void bitrv2(int n, Pointer<int> ip, Pointer<double> a)
         {
             int j, j1, k, k1, l, m, m2;
             double xr, xi, yr, yi;
@@ -577,7 +577,7 @@ namespace FftFlat
         }
 
 
-        internal static void bitrv2conj(int n, int* ip, double* a)
+        internal static void bitrv2conj(int n, Pointer<int> ip, Pointer<double> a)
         {
             int j, j1, k, k1, l, m, m2;
             double xr, xi, yr, yi;
@@ -695,7 +695,7 @@ namespace FftFlat
         }
 
 
-        internal static void cftfsub(int n, double* a, double* w)
+        internal static void cftfsub(int n, Pointer<double> a, Pointer<double> w)
         {
             int j, j1, j2, j3, l;
             double x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
@@ -752,7 +752,7 @@ namespace FftFlat
         }
 
 
-        internal static void cftbsub(int n, double* a, double* w)
+        internal static void cftbsub(int n, Pointer<double> a, Pointer<double> w)
         {
             int j, j1, j2, j3, l;
             double x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
@@ -809,7 +809,7 @@ namespace FftFlat
         }
 
 
-        internal static void cft1st(int n, double* a, double* w)
+        internal static void cft1st(int n, Pointer<double> a, Pointer<double> w)
         {
             int j, k1, k2;
             double wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
@@ -915,7 +915,7 @@ namespace FftFlat
         }
 
 
-        internal static void cftmdl(int n, int l, double* a, double* w)
+        internal static void cftmdl(int n, int l, Pointer<double> a, Pointer<double> w)
         {
             int j, j1, j2, j3, k, k1, k2, m, m2;
             double wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
@@ -1047,7 +1047,7 @@ namespace FftFlat
         }
 
 
-        internal static void rftfsub(int n, double* a, int nc, double* c)
+        internal static void rftfsub(int n, Pointer<double> a, int nc, Pointer<double> c)
         {
             int j, k, kk, ks, m;
             double wkr, wki, xr, xi, yr, yi;
@@ -1073,7 +1073,7 @@ namespace FftFlat
         }
 
 
-        internal static void rftbsub(int n, double* a, int nc, double* c)
+        internal static void rftbsub(int n, Pointer<double> a, int nc, Pointer<double> c)
         {
             int j, k, kk, ks, m;
             double wkr, wki, xr, xi, yr, yi;
@@ -1101,7 +1101,7 @@ namespace FftFlat
         }
 
 
-        internal static void dctsub(int n, double* a, int nc, double* c)
+        internal static void dctsub(int n, Pointer<double> a, int nc, Pointer<double> c)
         {
             int j, k, kk, ks, m;
             double wkr, wki, xr;
@@ -1123,7 +1123,7 @@ namespace FftFlat
         }
 
 
-        internal static void dstsub(int n, double* a, int nc, double* c)
+        internal static void dstsub(int n, Pointer<double> a, int nc, Pointer<double> c)
         {
             int j, k, kk, ks, m;
             double wkr, wki, xr;

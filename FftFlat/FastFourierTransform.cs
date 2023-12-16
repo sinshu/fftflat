@@ -43,40 +43,36 @@ namespace FftFlat
         /// Performs FFT in-place.
         /// </summary>
         /// <param name="samples">The samples to be transformed.</param>
-        public unsafe void ForwardInplace(Span<Complex> samples)
+        public void ForwardInplace(Span<Complex> samples)
         {
             if (samples.Length != length)
             {
                 throw new ArgumentException("The length of the span must match the FFT length.", nameof(samples));
             }
 
-            fixed (Complex* a = samples)
-            fixed (int* ip = bitReversal)
-            fixed (double* w = trigTable)
-            {
-                // Note that the sign of the imaginary part is inverted In Ooura's FFT.
-                fft4g.cdft(2 * length, -1, (double*)a, ip, w);
-            }
+            // Note that the sign of the imaginary part is inverted In Ooura's FFT.
+            var a = MemoryMarshal.Cast<Complex, double>(samples);
+            var ip = bitReversal.AsSpan();
+            var w = trigTable.AsSpan();
+            fft4g.cdft(2 * length, -1, a, ip, w);
         }
 
         /// <summary>
         /// Performs inverse FFT in-place.
         /// </summary>
         /// <param name="samples">The samples to be transformed.</param>
-        public unsafe void InverseInplace(Span<Complex> samples)
+        public void InverseInplace(Span<Complex> samples)
         {
             if (samples.Length != length)
             {
                 throw new ArgumentException("The length of the span must match the FFT length.", nameof(samples));
             }
 
-            fixed (Complex* a = samples)
-            fixed (int* ip = bitReversal)
-            fixed (double* w = trigTable)
-            {
-                // Note that the sign of the imaginary part is inverted In Ooura's FFT.
-                fft4g.cdft(2 * length, 1, (double*)a, ip, w);
-            }
+            // Note that the sign of the imaginary part is inverted In Ooura's FFT.
+            var a = MemoryMarshal.Cast<Complex, double>(samples);
+            var ip = bitReversal.AsSpan();
+            var w = trigTable.AsSpan();
+            fft4g.cdft(2 * length, 1, a, ip, w);
 
             // Scaling after IFFT.
             if (length >= Vector<double>.Count)
