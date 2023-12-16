@@ -44,7 +44,7 @@ fft.ForwardInplace(samples);
 
 Normalization is only done during the IFFT. This is similar to using `FourierOptions.AsymmetricScaling` for FFT in Math.NET Numerics.
 
-Note that the FastFourierTransform object is not thread-safe. If performing FFT across multiple threads, ensure a separate instance is provided for each thread.
+Note that the `FastFourierTransform` object is not thread-safe. If performing FFT across multiple threads, ensure a separate instance is provided for each thread.
 
 
 
