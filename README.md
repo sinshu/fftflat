@@ -42,13 +42,21 @@ var fft = new FastFourierTransform(1024);
 fft.ForwardInplace(samples);
 ```
 
-Normalization is only done during the IFFT. This is similar to using `FourierOptions.AsymmetricScaling` for FFT in Math.NET Numerics.
-
-Note that the `FastFourierTransform` object is not thread-safe. If performing FFT across multiple threads, ensure a separate instance is provided for each thread.
 
 
+## Important Notices
 
-# Demo
+Ooura's original FFT implementation is based on a different definition from that used in Math.NET Numerics. FFtFlat adjusts this difference, ensuring its results match those of [Math.NET Numerics' FFT](https://numerics.mathdotnet.com/api/MathNet.Numerics.IntegralTransforms/Fourier.htm).
+
+Normalization is only done during the IFFT.
+This is similar to using `FourierOptions.AsymmetricScaling` for FFT in Math.NET Numerics.
+
+Note that the `FastFourierTransform` object is not thread-safe.
+If performing FFT across multiple threads, ensure a separate instance is provided for each thread.
+
+
+
+## Demo
 
 In this demo video, the spectrum is visualized in real-time as sound is played using `AudioStream` of [RayLib-CsLo](https://github.com/NotNotTech/Raylib-CsLo).
 
@@ -60,7 +68,9 @@ https://www.youtube.com/watch?v=KTpG_z_ejZ0
 
 ## Performance
 
-The following is a benchmark comparing this with other pure C# FFT implementations. In this benchmark, the time taken to perform FFT and IFFT on a random signal was measured. The FFT lengths used were powers of two, ranging from 256 to 8192.
+The following is a benchmark comparing this with other pure C# FFT implementations.
+In this benchmark, the time taken to perform FFT and IFFT on a random signal was measured.
+The FFT lengths used were powers of two, ranging from 256 to 8192.
 
 | Method   | Length | Mean       | Error     | StdDev    | Gen0   | Allocated |
 |--------- |------- |-----------:|----------:|----------:|-------:|----------:|
