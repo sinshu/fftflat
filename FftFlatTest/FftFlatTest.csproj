@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Exocortex\Exocortex.csproj" />
     <ProjectReference Include="..\FftFlat\FftFlat.csproj" />
   </ItemGroup>
 
