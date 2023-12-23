@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace FftFlatTest
@@ -15,6 +16,9 @@ namespace FftFlatTest
         [TestCase(256)]
         [TestCase(512)]
         [TestCase(1024)]
+        [TestCase(2048)]
+        [TestCase(4096)]
+        [TestCase(8192)]
         public void Forward(int length)
         {
             var random = new Random(42);
@@ -48,6 +52,9 @@ namespace FftFlatTest
         [TestCase(256)]
         [TestCase(512)]
         [TestCase(1024)]
+        [TestCase(2048)]
+        [TestCase(4096)]
+        [TestCase(8192)]
         public void Inverse(int length)
         {
             var random = new Random(42);
