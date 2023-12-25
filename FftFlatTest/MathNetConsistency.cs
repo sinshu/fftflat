@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
 using NUnit.Framework;
 
@@ -6,6 +7,7 @@ namespace FftFlatTest
 {
     public class MathNetConsistency
     {
+        [TestCase(1)]
         [TestCase(2)]
         [TestCase(4)]
         [TestCase(8)]
@@ -41,6 +43,7 @@ namespace FftFlatTest
             }
         }
 
+        [TestCase(1)]
         [TestCase(2)]
         [TestCase(4)]
         [TestCase(8)]

@@ -23,9 +23,9 @@ namespace FftFlat
         /// </remarks>
         public FastFourierTransform(int length)
         {
-            if (length < 2)
+            if (length < 1)
             {
-                throw new ArgumentException("The FFT Length must be greater than or equal to two.", nameof(length));
+                throw new ArgumentException("The FFT Length must be greater than or equal to one.", nameof(length));
             }
 
             if ((length & (length - 1)) != 0)
@@ -40,7 +40,7 @@ namespace FftFlat
         }
 
         /// <summary>
-        /// Performs FFT in-place.
+        /// Performs forward FFT in-place.
         /// </summary>
         /// <param name="samples">The samples to be transformed.</param>
         public void ForwardInplace(Span<Complex> samples)
@@ -93,7 +93,7 @@ namespace FftFlat
         }
 
         /// <summary>
-        /// Performs FFT.
+        /// Performs forward FFT.
         /// </summary>
         /// <param name="source">The samples to be transformed.</param>
         /// <param name="destination">The destination to store the transformed samples.</param>
