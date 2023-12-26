@@ -18,23 +18,26 @@ namespace FftFlatTest
         [TestCase(256)]
         [TestCase(512)]
         [TestCase(1024)]
+        [TestCase(2048)]
+        [TestCase(4096)]
+        [TestCase(8192)]
         public void Forward(int length)
         {
             var random = new Random(42);
-            var values = new Complex[length];
+            var samples = new Complex[length];
             for (var i = 0; i < length; i++)
             {
-                values[i] = new Complex(random.NextDouble(), random.NextDouble());
+                samples[i] = new Complex(random.NextDouble(), random.NextDouble());
             }
 
-            var expected = values.ToArray();
+            var expected = samples.ToArray();
             MathNet.Numerics.IntegralTransforms.Fourier.Forward(
                 expected,
                 MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
 
-            var actual = values.ToArray();
-            var fft = new FftFlat.FastFourierTransform(length);
-            fft.ForwardInplace(actual);
+            var actual = samples.ToArray();
+            var fftFlat = new FftFlat.FastFourierTransform(length);
+            fftFlat.ForwardInplace(actual);
 
             for (var i = 0; i < length; i++)
             {
@@ -54,23 +57,26 @@ namespace FftFlatTest
         [TestCase(256)]
         [TestCase(512)]
         [TestCase(1024)]
+        [TestCase(2048)]
+        [TestCase(4096)]
+        [TestCase(8192)]
         public void Inverse(int length)
         {
             var random = new Random(42);
-            var values = new Complex[length];
+            var samples = new Complex[length];
             for (var i = 0; i < length; i++)
             {
-                values[i] = new Complex(random.NextDouble(), random.NextDouble());
+                samples[i] = new Complex(random.NextDouble(), random.NextDouble());
             }
 
-            var expected = values.ToArray();
+            var expected = samples.ToArray();
             MathNet.Numerics.IntegralTransforms.Fourier.Inverse(
                 expected,
                 MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
 
-            var actual = values.ToArray();
-            var fft = new FftFlat.FastFourierTransform(length);
-            fft.InverseInplace(actual);
+            var actual = samples.ToArray();
+            var fftFlat = new FftFlat.FastFourierTransform(length);
+            fftFlat.InverseInplace(actual);
 
             for (var i = 0; i < length; i++)
             {

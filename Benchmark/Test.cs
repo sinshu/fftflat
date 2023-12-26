@@ -13,8 +13,10 @@ namespace Benchmark
         private Complex[] values_FftSharp;
         private Complex[] values_MathNet;
         private Exocortex.DSP.Complex[] values_Exocortex;
-        private FftFlat.FastFourierTransform fft;
-        private double inverseScaling;
+
+        private FftFlat.FastFourierTransform fftFlat;
+        private Exocortex.DSP.Wrapper exocortex;
+
         private StreamWriter log;
 
         [Params(256, 512, 1024, 2048, 4096, 8192)]
@@ -27,15 +29,16 @@ namespace Benchmark
             values_FftSharp = DummyData.Create(Length);
             values_MathNet = DummyData.Create(Length);
             values_Exocortex = DummyData.Create(Length).Select(x => new Exocortex.DSP.Complex(x.Real, x.Imaginary)).ToArray();
-            fft = new FftFlat.FastFourierTransform(Length);
-            inverseScaling = 1.0 / Length;
+
+            fftFlat = new FftFlat.FastFourierTransform(Length);
+            exocortex = new Exocortex.DSP.Wrapper(Length);
 
             var dir = Directory.GetCurrentDirectory();
             while (!Directory.GetParent(dir).EnumerateDirectories().Any(d => d.Name == "Benchmark"))
             {
                 dir = Directory.GetParent(dir).FullName;
             }
-            var logPath = Path.Combine(dir, "bin", "log.txt");
+            var logPath = Path.Combine(dir, "bin", "log" + Length + ".txt");
             log = new StreamWriter(logPath);
             log.WriteLine("=== BEFORE ===");
             log.WriteLine("FftFlat: " + GetMaxValue(values_FftFlat));
@@ -68,8 +71,8 @@ namespace Benchmark
         [Benchmark]
         public void FftFlat()
         {
-            fft.ForwardInplace(values_FftFlat);
-            fft.InverseInplace(values_FftFlat);
+            fftFlat.ForwardInplace(values_FftFlat);
+            fftFlat.InverseInplace(values_FftFlat);
         }
 
         [Benchmark]
@@ -93,8 +96,8 @@ namespace Benchmark
         [Benchmark]
         public void Exocortex()
         {
-            global::Exocortex.DSP.Wrapper.Forward(values_Exocortex);
-            global::Exocortex.DSP.Wrapper.Inverse(values_Exocortex, inverseScaling);
+            exocortex.Forward(values_Exocortex);
+            exocortex.Inverse(values_Exocortex);
         }
     }
 }
