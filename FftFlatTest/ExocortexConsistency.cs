@@ -22,18 +22,19 @@ namespace FftFlatTest
         public void Forward(int length)
         {
             var random = new Random(42);
-            var values = new System.Numerics.Complex[length];
+            var samples = new System.Numerics.Complex[length];
             for (var i = 0; i < length; i++)
             {
-                values[i] = new System.Numerics.Complex(random.NextDouble(), random.NextDouble());
+                samples[i] = new System.Numerics.Complex(random.NextDouble(), random.NextDouble());
             }
 
-            var expected = values.Select(x => new Exocortex.DSP.Complex(x.Real, x.Imaginary)).ToArray();
-            Exocortex.DSP.Wrapper.Forward(expected);
+            var expected = samples.Select(x => new Exocortex.DSP.Complex(x.Real, x.Imaginary)).ToArray();
+            var exocortex = new Exocortex.DSP.Wrapper(length);
+            exocortex.Forward(expected);
 
-            var actual = values.ToArray();
-            var fft = new FftFlat.FastFourierTransform(length);
-            fft.ForwardInplace(actual);
+            var actual = samples.ToArray();
+            var fftFlat = new FftFlat.FastFourierTransform(length);
+            fftFlat.ForwardInplace(actual);
 
             for (var i = 0; i < length; i++)
             {
@@ -58,19 +59,19 @@ namespace FftFlatTest
         public void Inverse(int length)
         {
             var random = new Random(42);
-            var values = new System.Numerics.Complex[length];
+            var samples = new System.Numerics.Complex[length];
             for (var i = 0; i < length; i++)
             {
-                values[i] = new System.Numerics.Complex(random.NextDouble(), random.NextDouble());
+                samples[i] = new System.Numerics.Complex(random.NextDouble(), random.NextDouble());
             }
 
-            var expected = values.Select(x => new Exocortex.DSP.Complex(x.Real, x.Imaginary)).ToArray();
-            var scaling = 1.0 / expected.Length;
-            Exocortex.DSP.Wrapper.Inverse(expected, scaling);
+            var expected = samples.Select(x => new Exocortex.DSP.Complex(x.Real, x.Imaginary)).ToArray();
+            var exocortex = new Exocortex.DSP.Wrapper(length);
+            exocortex.Inverse(expected);
 
-            var actual = values.ToArray();
-            var fft = new FftFlat.FastFourierTransform(length);
-            fft.InverseInplace(actual);
+            var actual = samples.ToArray();
+            var fftFlat = new FftFlat.FastFourierTransform(length);
+            fftFlat.InverseInplace(actual);
 
             for (var i = 0; i < length; i++)
             {

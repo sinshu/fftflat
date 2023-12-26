@@ -5,8 +5,9 @@ using NUnit.Framework;
 
 namespace FftFlatTest
 {
-    public class FftSharpConsistency
+    public class Outplace
     {
+        [TestCase(1)]
         [TestCase(2)]
         [TestCase(4)]
         [TestCase(8)]
@@ -29,12 +30,13 @@ namespace FftFlatTest
                 samples[i] = new Complex(random.NextDouble(), random.NextDouble());
             }
 
-            var expected = samples.ToArray();
-            FftSharp.FFT.Forward(expected);
+            var fft = new FftFlat.FastFourierTransform(length);
 
-            var actual = samples.ToArray();
-            var fftFlat = new FftFlat.FastFourierTransform(length);
-            fftFlat.ForwardInplace(actual);
+            var expected = samples.ToArray();
+            fft.ForwardInplace(expected);
+
+            var actual = new Complex[length];
+            fft.Forward(samples, actual);
 
             for (var i = 0; i < length; i++)
             {
@@ -43,6 +45,7 @@ namespace FftFlatTest
             }
         }
 
+        [TestCase(1)]
         [TestCase(2)]
         [TestCase(4)]
         [TestCase(8)]
@@ -65,12 +68,13 @@ namespace FftFlatTest
                 samples[i] = new Complex(random.NextDouble(), random.NextDouble());
             }
 
-            var expected = samples.ToArray();
-            FftSharp.FFT.Inverse(expected);
+            var fft = new FftFlat.FastFourierTransform(length);
 
-            var actual = samples.ToArray();
-            var fftFlat = new FftFlat.FastFourierTransform(length);
-            fftFlat.InverseInplace(actual);
+            var expected = samples.ToArray();
+            fft.InverseInplace(expected);
+
+            var actual = new Complex[length];
+            fft.Inverse(samples, actual);
 
             for (var i = 0; i < length; i++)
             {
