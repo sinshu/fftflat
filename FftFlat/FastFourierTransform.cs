@@ -55,7 +55,7 @@ namespace FftFlat
             fixed (double* w = trigTable)
             {
                 // Note that the sign of the imaginary part is inverted In Ooura's FFT.
-                fft4g.cdft(2 * length, -1, (double*)a, ip, w);
+                fftsg.cdft(2 * length, -1, (double*)a, ip, w);
             }
         }
 
@@ -75,7 +75,7 @@ namespace FftFlat
             fixed (double* w = trigTable)
             {
                 // Note that the sign of the imaginary part is inverted In Ooura's FFT.
-                fft4g.cdft(2 * length, 1, (double*)a, ip, w);
+                fftsg.cdft(2 * length, 1, (double*)a, ip, w);
             }
 
             // Scaling after IFFT.
