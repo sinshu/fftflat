@@ -7,7 +7,7 @@ This library is adapted from [General Purpose FFT Package by Ooura](https://www.
 
 ## Features
 
-* __Fast:__ More than twice as fast as the managed FFT implementation in Math.NET Numerics.
+* __Fast:__ More than four times as fast as the managed FFT implementation in Math.NET Numerics.
 * __Lightweight:__ Small code size, with no dependencies other than .NET Standard 2.1.
 
 
