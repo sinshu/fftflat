@@ -72,26 +72,26 @@ The following is a benchmark comparing this with other pure C# FFT implementatio
 In this benchmark, the time taken to perform FFT and IFFT on a random signal was measured.
 The FFT lengths used were powers of two, ranging from 256 to 8192.
 
-| Method   | Length | Mean       | Error     | StdDev    | Gen0   | Allocated |
-|--------- |------- |-----------:|----------:|----------:|-------:|----------:|
-| **FftFlat**  | **256**    |   **1.528 μs** | **0.0029 μs** | **0.0026 μs** |      **-** |         **-** |
-| FftSharp | 256    |  19.160 μs | 0.0760 μs | 0.0711 μs |      - |         - |
-| MathNet  | 256    |   7.809 μs | 0.0239 μs | 0.0212 μs |      - |         - |
-| **FftFlat**  | **512**    |   **3.657 μs** | **0.0086 μs** | **0.0080 μs** |      **-** |         **-** |
-| FftSharp | 512    |  43.115 μs | 0.1461 μs | 0.1367 μs |      - |         - |
-| MathNet  | 512    |  16.250 μs | 0.0471 μs | 0.0440 μs |      - |         - |
-| **FftFlat**  | **1024**   |   **7.624 μs** | **0.0352 μs** | **0.0294 μs** |      **-** |         **-** |
-| FftSharp | 1024   |  93.643 μs | 0.1119 μs | 0.1046 μs |      - |         - |
-| MathNet  | 1024   |  39.235 μs | 0.0591 μs | 0.0524 μs | 1.5869 |   20875 B |
-| **FftFlat**  | **2048**   |  **17.883 μs** | **0.0602 μs** | **0.0563 μs** |      **-** |         **-** |
-| FftSharp | 2048   | 205.152 μs | 0.4467 μs | 0.4179 μs |      - |         - |
-| MathNet  | 2048   |  77.048 μs | 0.3446 μs | 0.2878 μs | 1.8311 |   24692 B |
-| **FftFlat**  | **4096**   |  **39.643 μs** | **0.3727 μs** | **0.3486 μs** |      **-** |         **-** |
-| FftSharp | 4096   | 444.473 μs | 0.6072 μs | 0.5382 μs |      - |         - |
-| MathNet  | 4096   | 183.645 μs | 0.7292 μs | 0.6821 μs | 2.4414 |   33076 B |
-| **FftFlat**  | **8192**   | **113.593 μs** | **0.6839 μs** | **0.6397 μs** |      **-** |         **-** |
-| FftSharp | 8192   | 956.056 μs | 1.3150 μs | 1.2300 μs |      - |       1 B |
-| MathNet  | 8192   | 321.394 μs | 0.9518 μs | 0.8437 μs | 3.4180 |   46710 B |
+| Method    | Length | Mean         | Error     | StdDev    | Gen0   | Allocated |
+|---------- |------- |-------------:|----------:|----------:|-------:|----------:|
+| **FftFlat**   | **256**    |     **1.635 μs** | **0.0060 μs** | **0.0056 μs** |      **-** |         **-** |
+| FftSharp  | 256    |    20.868 μs | 0.0910 μs | 0.0851 μs |      - |         - |
+| MathNet   | 256    |     7.641 μs | 0.0272 μs | 0.0255 μs |      - |         - |
+| **FftFlat**   | **512**    |     **3.725 μs** | **0.0060 μs** | **0.0056 μs** |      **-** |         **-** |
+| FftSharp  | 512    |    46.425 μs | 0.0742 μs | 0.0658 μs |      - |         - |
+| MathNet   | 512    |    15.886 μs | 0.0274 μs | 0.0243 μs |      - |         - |
+| **FftFlat**   | **1024**   |     **7.798 μs** | **0.0165 μs** | **0.0146 μs** |      **-** |         **-** |
+| FftSharp  | 1024   |   101.918 μs | 0.5292 μs | 0.4950 μs |      - |         - |
+| MathNet   | 1024   |    39.738 μs | 0.0880 μs | 0.0823 μs | 1.6479 |   21400 B |
+| **FftFlat**   | **2048**   |    **17.728 μs** | **0.0457 μs** | **0.0428 μs** |      **-** |         **-** |
+| FftSharp  | 2048   |   220.215 μs | 0.7828 μs | 0.7323 μs |      - |         - |
+| MathNet   | 2048   |    72.424 μs | 0.4255 μs | 0.3772 μs | 1.9531 |   25744 B |
+| **FftFlat**   | **4096**   |    **36.908 μs** | **0.1140 μs** | **0.1066 μs** |      **-** |         **-** |
+| FftSharp  | 4096   |   475.229 μs | 1.0854 μs | 0.9622 μs |      - |         - |
+| MathNet   | 4096   |   180.050 μs | 1.4773 μs | 1.3096 μs | 2.4414 |   33864 B |
+| **FftFlat**   | **8192**   |    **84.125 μs** | **0.2458 μs** | **0.2299 μs** |      **-** |         **-** |
+| FftSharp  | 8192   | 1,027.164 μs | 4.5749 μs | 4.2794 μs |      - |       1 B |
+| MathNet   | 8192   |   340.598 μs | 2.9078 μs | 2.5777 μs | 3.4180 |   47438 B |
 
 ![A graphical plot of the table above.](plot.png)
 
@@ -100,9 +100,9 @@ The FFT lengths used were powers of two, ranging from 256 to 8192.
 ## Todo
 
 * ✅ FFT for power-of-two length samples
-* ⬜ FFT for arbitrary length samples
 * ⬜ Other transformations (such as cosine transform)
 * ⬜ Support for 32-bit floating-point numbers
+* ⬜ FFT for arbitrary length samples
 
 
 
