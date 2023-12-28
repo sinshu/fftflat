@@ -1,6 +1,6 @@
 # FftFlat
 
-The purpose of this library is to provide a reasonably fast FFT implementation, entirely in pure C#.
+The purpose of this library is to provide a fast FFT implementation, entirely in pure C#.
 This library is adapted from [General Purpose FFT Package by Ooura](https://www.kurims.kyoto-u.ac.jp/~ooura/fft.html), modified to be compatible with the .NET Standard complex number type.
 
 
