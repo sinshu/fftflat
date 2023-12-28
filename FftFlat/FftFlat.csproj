@@ -4,13 +4,13 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>0.2.1</Version>
+    <Version>0.3.0</Version>
     <Authors>Nobuaki Tanaka</Authors>
     <Description>A fast FFT implementation in pure C#</Description>
     <PackageProjectUrl>https://github.com/sinshu/fftflat</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sinshu/fftflat</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>fft</PackageTags>
+    <PackageTags>fft;dsp;numerics;math;audio</PackageTags>
     <PackageReleaseNotes>https://github.com/sinshu/fftflat/blob/main/CHANGELOG.md</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
