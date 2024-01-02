@@ -13,7 +13,7 @@
 
 # v0.2.0
 
-* Replaced the implementation with Ooura's [fft4g.c](https://github.com/sinshu/ooura-fft/blob/main/fft/fft4g.c).
+* Replaced the [KISS FFT](https://github.com/mborgerding/kissfft)-based implementation with Ooura's [fft4g.c](https://github.com/sinshu/ooura-fft/blob/main/fft/fft4g.c).
 * Changed the license to MIT.
 
 
