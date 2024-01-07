@@ -18,25 +18,27 @@ namespace Exocortex.DSP
             Fourier.FFT(samples, samples.Length, FourierDirection.Backward);
         }
 
-        public void Inverse(Complex[] samples)
+        public void Inverse(Complex[] spectrum)
         {
-            Fourier.FFT(samples, samples.Length, FourierDirection.Forward);
+            Fourier.FFT(spectrum, spectrum.Length, FourierDirection.Forward);
+            MultiplyInplace(MemoryMarshal.Cast<Complex, double>(spectrum), inverseScaling);
+        }
 
-            // Scaling after IFFT.
-            if (samples.Length >= Vector<double>.Count)
+        private static void MultiplyInplace(Span<double> x, double y)
+        {
+            var vectors = MemoryMarshal.Cast<double, Vector<double>>(x);
+
+            var count = 0;
+
+            for (var i = 0; i < vectors.Length; i++)
             {
-                var vectors = MemoryMarshal.Cast<Complex, Vector<double>>(samples);
-                for (var i = 0; i < vectors.Length; i++)
-                {
-                    vectors[i] *= inverseScaling;
-                }
+                vectors[i] *= y;
+                count += Vector<double>.Count;
             }
-            else
+
+            for (var i = count; i < x.Length; i++)
             {
-                for (var i = 0; i < samples.Length; i++)
-                {
-                    samples[i] *= inverseScaling;
-                }
+                x[i] *= y;
             }
         }
     }

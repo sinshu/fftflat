@@ -19,7 +19,7 @@ namespace FftFlat
         /// </summary>
         /// <param name="length">The length of the FFT.</param>
         /// <remarks>
-        /// The length must be a power of two.
+        /// The FFT length must be a power of two.
         /// </remarks>
         public FastFourierTransform(int length)
         {
@@ -62,15 +62,15 @@ namespace FftFlat
         /// <summary>
         /// Performs inverse FFT in-place.
         /// </summary>
-        /// <param name="samples">The samples to be transformed.</param>
-        public unsafe void InverseInplace(Span<Complex> samples)
+        /// <param name="spectrum">The spectrum to be transformed.</param>
+        public unsafe void InverseInplace(Span<Complex> spectrum)
         {
-            if (samples.Length != length)
+            if (spectrum.Length != length)
             {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(samples));
+                throw new ArgumentException("The length of the span must match the FFT length.", nameof(spectrum));
             }
 
-            fixed (Complex* a = samples)
+            fixed (Complex* a = spectrum)
             fixed (int* ip = bitReversal)
             fixed (double* w = trigTable)
             {
@@ -78,22 +78,7 @@ namespace FftFlat
                 fftsg.cdft(2 * length, 1, (double*)a, ip, w);
             }
 
-            // Scaling after IFFT.
-            if (length >= Vector<double>.Count)
-            {
-                var vectors = MemoryMarshal.Cast<Complex, Vector<double>>(samples);
-                for (var i = 0; i < vectors.Length; i++)
-                {
-                    vectors[i] *= inverseScaling;
-                }
-            }
-            else
-            {
-                for (var i = 0; i < samples.Length; i++)
-                {
-                    samples[i] *= inverseScaling;
-                }
-            }
+            ArrayMath.MultiplyInplace(MemoryMarshal.Cast<Complex, double>(spectrum), inverseScaling);
         }
 
         /// <summary>
@@ -120,8 +105,8 @@ namespace FftFlat
         /// <summary>
         /// Performs inverse FFT.
         /// </summary>
-        /// <param name="source">The samples to be transformed.</param>
-        /// <param name="destination">The destination to store the transformed samples.</param>
+        /// <param name="source">The spectrum to be transformed.</param>
+        /// <param name="destination">The destination to store the transformed spectrum.</param>
         public void Inverse(ReadOnlySpan<Complex> source, Span<Complex> destination)
         {
             if (source.Length != length)
