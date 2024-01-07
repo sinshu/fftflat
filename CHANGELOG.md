@@ -1,3 +1,9 @@
+# v0.3.1
+
+* Fixed potential issue where IFFT may fail with very short FFT lengths.
+
+
+
 # v0.3.0
 
 * Replaced the implementation with Ooura's [fftsg.c](https://github.com/sinshu/ooura-fft/blob/main/fft/fftsg.c).
