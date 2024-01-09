@@ -12,10 +12,11 @@ namespace Benchmark
         private Complex[] values_FftFlat;
         private Complex[] values_FftSharp;
         private Complex[] values_MathNet;
-        private Exocortex.DSP.Complex[] values_Exocortex;
+        private double[] values_FftFlatReal;
+        private double[] values_MathNetReal;
 
         private FftFlat.FastFourierTransform fftFlat;
-        private Exocortex.DSP.Wrapper exocortex;
+        private FftFlat.RealFourierTransform fftFlatReal;
 
         private StreamWriter log;
 
@@ -25,13 +26,14 @@ namespace Benchmark
         [GlobalSetup]
         public void Setup()
         {
-            values_FftFlat = DummyData.Create(Length);
-            values_FftSharp = DummyData.Create(Length);
-            values_MathNet = DummyData.Create(Length);
-            values_Exocortex = DummyData.Create(Length).Select(x => new Exocortex.DSP.Complex(x.Real, x.Imaginary)).ToArray();
+            values_FftFlat = DummyData.CreateComplex(Length);
+            values_FftSharp = DummyData.CreateComplex(Length);
+            values_MathNet = DummyData.CreateComplex(Length);
+            values_FftFlatReal = DummyData.CreateDouble(Length).Append(0.0).Append(0.0).ToArray();
+            values_MathNetReal = DummyData.CreateDouble(Length).Append(0.0).Append(0.0).ToArray();
 
             fftFlat = new FftFlat.FastFourierTransform(Length);
-            exocortex = new Exocortex.DSP.Wrapper(Length);
+            fftFlatReal = new FftFlat.RealFourierTransform(Length);
 
             var dir = Directory.GetCurrentDirectory();
             while (!Directory.GetParent(dir).EnumerateDirectories().Any(d => d.Name == "Benchmark"))
@@ -44,7 +46,8 @@ namespace Benchmark
             log.WriteLine("FftFlat: " + GetMaxValue(values_FftFlat));
             log.WriteLine("FftSharp: " + GetMaxValue(values_FftSharp));
             log.WriteLine("MathNet: " + GetMaxValue(values_MathNet));
-            log.WriteLine("Exocortex: " + GetMaxValue(values_Exocortex));
+            log.WriteLine("FftFlatReal: " + GetMaxValue(values_FftFlatReal));
+            log.WriteLine("MathNetReal: " + GetMaxValue(values_MathNetReal));
         }
 
         [GlobalCleanup]
@@ -54,7 +57,8 @@ namespace Benchmark
             log.WriteLine("FftFlat: " + GetMaxValue(values_FftFlat));
             log.WriteLine("FftSharp: " + GetMaxValue(values_FftSharp));
             log.WriteLine("MathNet: " + GetMaxValue(values_MathNet));
-            log.WriteLine("Exocortex: " + GetMaxValue(values_Exocortex));
+            log.WriteLine("FftFlatReal: " + GetMaxValue(values_FftFlatReal));
+            log.WriteLine("MathNetReal: " + GetMaxValue(values_MathNetReal));
             log.Dispose();
         }
 
@@ -63,9 +67,9 @@ namespace Benchmark
             return data.Select(x => Math.Max(Math.Abs(x.Real), Math.Abs(x.Imaginary))).Max();
         }
 
-        private static double GetMaxValue(Exocortex.DSP.Complex[] data)
+        private static double GetMaxValue(double[] data)
         {
-            return data.Select(x => Math.Max(Math.Abs(x.Re), Math.Abs(x.Im))).Max();
+            return data.Select(x => Math.Abs(x)).Max();
         }
 
         [Benchmark]
@@ -94,10 +98,23 @@ namespace Benchmark
         }
 
         [Benchmark]
-        public void Exocortex()
+        public void FftFlatReal()
         {
-            exocortex.Forward(values_Exocortex);
-            exocortex.Inverse(values_Exocortex);
+            var spectrum = fftFlatReal.ForwardInplace(values_FftFlatReal);
+            fftFlatReal.InverseInplace(spectrum);
+        }
+
+        [Benchmark]
+        public void MathNetReal()
+        {
+            global::MathNet.Numerics.IntegralTransforms.Fourier.ForwardReal(
+                values_MathNetReal,
+                Length,
+                global::MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
+            global::MathNet.Numerics.IntegralTransforms.Fourier.InverseReal(
+                values_MathNetReal,
+                Length,
+                global::MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
         }
     }
 }
