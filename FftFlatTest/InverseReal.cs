@@ -25,7 +25,7 @@ namespace FftFlatTest
             var spectrum = Enumerable.Repeat(Complex.One, length / 2 + 1).ToArray();
 
             var rft = new FftFlat.RealFourierTransform(length);
-            var samples = rft.InverseInplace(spectrum);
+            var samples = rft.Inverse(spectrum);
 
             for (var i = 0; i < length; i++)
             {
@@ -55,7 +55,7 @@ namespace FftFlatTest
             spectrum[w] = new Complex(0, -length / 2);
 
             var rft = new FftFlat.RealFourierTransform(length);
-            var samples = rft.InverseInplace(spectrum);
+            var samples = rft.Inverse(spectrum);
 
             for (var i = 0; i < length; i++)
             {
@@ -79,7 +79,7 @@ namespace FftFlatTest
             spectrum[w] = new Complex(length / 2, 0);
 
             var rft = new FftFlat.RealFourierTransform(length);
-            var samples = rft.InverseInplace(spectrum);
+            var samples = rft.Inverse(spectrum);
 
             for (var i = 0; i < length; i++)
             {

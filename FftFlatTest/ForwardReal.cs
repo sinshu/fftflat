@@ -25,7 +25,7 @@ namespace FftFlatTest
             samples[0] = 1;
 
             var rft = new FftFlat.RealFourierTransform(length);
-            var spectrum = rft.ForwardInplace(samples);
+            var spectrum = rft.Forward(samples);
 
             foreach (var value in spectrum)
             {
@@ -52,7 +52,7 @@ namespace FftFlatTest
             }
 
             var rft = new FftFlat.RealFourierTransform(length);
-            var spectrum = rft.ForwardInplace(samples);
+            var spectrum = rft.Forward(samples);
 
             for (var i = 0; i < spectrum.Length; i++)
             {
@@ -87,7 +87,7 @@ namespace FftFlatTest
             }
 
             var rft = new FftFlat.RealFourierTransform(length);
-            var spectrum = rft.ForwardInplace(samples);
+            var spectrum = rft.Forward(samples);
 
             for (var i = 0; i < spectrum.Length; i++)
             {

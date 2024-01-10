@@ -100,8 +100,8 @@ namespace Benchmark
         [Benchmark]
         public void FftFlatReal()
         {
-            var spectrum = fftFlatReal.ForwardInplace(values_FftFlatReal);
-            fftFlatReal.InverseInplace(spectrum);
+            var spectrum = fftFlatReal.Forward(values_FftFlatReal);
+            fftFlatReal.Inverse(spectrum);
         }
 
         [Benchmark]

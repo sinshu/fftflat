@@ -31,8 +31,8 @@ namespace FftFlatTest
 
             var actual = expected.Append(0.0).Append(0.0).ToArray();
             var rft = new FftFlat.RealFourierTransform(length);
-            var spectrum = rft.ForwardInplace(actual);
-            rft.InverseInplace(spectrum);
+            var spectrum = rft.Forward(actual);
+            rft.Inverse(spectrum);
 
             for (var i = 0; i < length; i++)
             {
@@ -64,8 +64,8 @@ namespace FftFlatTest
 
             var actual = expected.Append(0.0).Append(0.0).ToArray();
             var rft = new FftFlat.RealFourierTransform(length);
-            var spectrum = rft.ForwardInplace(actual);
-            rft.InverseInplace(spectrum);
+            var spectrum = rft.Forward(actual);
+            rft.Inverse(spectrum);
 
             for (var i = 0; i < length; i++)
             {
