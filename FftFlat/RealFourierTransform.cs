@@ -86,7 +86,7 @@ namespace FftFlat
         /// </summary>
         /// <param name="spectrum">The spectrum to be transformed.</param>
         /// <returns>
-        /// Returns the view of the results as a <see cref="Span{T}"/> of <see cref="double"/> after the IFFT is performed in-place.
+        /// Returns the view of the results as a <see cref="Span{T}"/> of <see cref="double"/> after the inverse FFT is performed in-place.
         /// </returns>
         /// /// <remarks>
         /// The length of the <paramref name="spectrum"/> must be the FFT length / 2 + 1.
