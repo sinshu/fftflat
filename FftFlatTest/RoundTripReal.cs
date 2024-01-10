@@ -23,13 +23,17 @@ namespace FftFlatTest
         public void Random1(int length)
         {
             var random = new Random(42);
-            var expected = new double[length];
+            var expected = new double[length + 2];
             for (var i = 0; i < length; i++)
             {
                 expected[i] = random.NextDouble();
             }
 
-            var actual = expected.Append(0.0).Append(0.0).ToArray();
+            // Ensure the last two samples are ignored.
+            expected[length] = 1.0E10;
+            expected[length + 1] = 1.0E10;
+
+            var actual = expected.ToArray();
             var rft = new FftFlat.RealFourierTransform(length);
             var spectrum = rft.Forward(actual);
             rft.Inverse(spectrum);
@@ -38,6 +42,10 @@ namespace FftFlatTest
             {
                 Assert.That(actual[i], Is.EqualTo(expected[i]).Within(1.0E-6));
             }
+
+            // Ensure the last two samples are 0.
+            Assert.That(actual[length] == 0);
+            Assert.That(actual[length + 1] == 0);
         }
 
         [TestCase(2)]
@@ -56,13 +64,17 @@ namespace FftFlatTest
         public void Random2(int length)
         {
             var random = new Random(42);
-            var expected = new double[length];
+            var expected = new double[length + 2];
             for (var i = 0; i < length; i++)
             {
                 expected[i] = random.NextDouble() - 0.5;
             }
 
-            var actual = expected.Append(0.0).Append(0.0).ToArray();
+            // Ensure the last two samples are ignored.
+            expected[length] = -1.0E20;
+            expected[length + 1] = -1.0E20;
+
+            var actual = expected.ToArray();
             var rft = new FftFlat.RealFourierTransform(length);
             var spectrum = rft.Forward(actual);
             rft.Inverse(spectrum);
@@ -71,6 +83,10 @@ namespace FftFlatTest
             {
                 Assert.That(actual[i], Is.EqualTo(expected[i]).Within(1.0E-6));
             }
+
+            // Ensure the last two samples are 0.
+            Assert.That(actual[length] == 0);
+            Assert.That(actual[length + 1] == 0);
         }
     }
 }

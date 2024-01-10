@@ -13,6 +13,7 @@ namespace Benchmark
         private Complex[] values_FftSharp;
         private Complex[] values_MathNet;
         private double[] values_FftFlatReal;
+        private double[] values_FftSharpReal;
         private double[] values_MathNetReal;
 
         private FftFlat.FastFourierTransform fftFlat;
@@ -30,6 +31,7 @@ namespace Benchmark
             values_FftSharp = DummyData.CreateComplex(Length);
             values_MathNet = DummyData.CreateComplex(Length);
             values_FftFlatReal = DummyData.CreateDouble(Length).Append(0.0).Append(0.0).ToArray();
+            values_FftSharpReal = DummyData.CreateDouble(Length).ToArray();
             values_MathNetReal = DummyData.CreateDouble(Length).Append(0.0).Append(0.0).ToArray();
 
             fftFlat = new FftFlat.FastFourierTransform(Length);
@@ -47,6 +49,7 @@ namespace Benchmark
             log.WriteLine("FftSharp: " + GetMaxValue(values_FftSharp));
             log.WriteLine("MathNet: " + GetMaxValue(values_MathNet));
             log.WriteLine("FftFlatReal: " + GetMaxValue(values_FftFlatReal));
+            log.WriteLine("FftSharpReal: " + GetMaxValue(values_FftSharpReal));
             log.WriteLine("MathNetReal: " + GetMaxValue(values_MathNetReal));
         }
 
@@ -58,6 +61,7 @@ namespace Benchmark
             log.WriteLine("FftSharp: " + GetMaxValue(values_FftSharp));
             log.WriteLine("MathNet: " + GetMaxValue(values_MathNet));
             log.WriteLine("FftFlatReal: " + GetMaxValue(values_FftFlatReal));
+            log.WriteLine("FftSharpReal: " + GetMaxValue(values_FftSharpReal));
             log.WriteLine("MathNetReal: " + GetMaxValue(values_MathNetReal));
             log.Dispose();
         }
@@ -102,6 +106,13 @@ namespace Benchmark
         {
             var spectrum = fftFlatReal.Forward(values_FftFlatReal);
             fftFlatReal.Inverse(spectrum);
+        }
+
+        [Benchmark]
+        public void FftSharpReal()
+        {
+            var spectrum = global::FftSharp.FFT.ForwardReal(values_FftSharpReal);
+            values_FftSharpReal = global::FftSharp.FFT.InverseReal(spectrum);
         }
 
         [Benchmark]
