@@ -24,20 +24,20 @@ namespace FftFlatTest
         public void Forward(int length)
         {
             var random = new Random(42);
-            var samples = new Complex[length];
+            var data = new Complex[length];
             for (var i = 0; i < length; i++)
             {
-                samples[i] = new Complex(random.NextDouble(), random.NextDouble());
+                data[i] = new Complex(random.NextDouble(), random.NextDouble());
             }
 
-            var expected = samples.ToArray();
+            var expected = data.ToArray();
             MathNet.Numerics.IntegralTransforms.Fourier.Forward(
                 expected,
                 MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
 
-            var actual = samples.ToArray();
+            var actual = data.ToArray();
             var fftFlat = new FftFlat.FastFourierTransform(length);
-            fftFlat.ForwardInplace(actual);
+            fftFlat.Forward(actual);
 
             for (var i = 0; i < length; i++)
             {
@@ -63,20 +63,20 @@ namespace FftFlatTest
         public void Inverse(int length)
         {
             var random = new Random(42);
-            var samples = new Complex[length];
+            var data = new Complex[length];
             for (var i = 0; i < length; i++)
             {
-                samples[i] = new Complex(random.NextDouble(), random.NextDouble());
+                data[i] = new Complex(random.NextDouble(), random.NextDouble());
             }
 
-            var expected = samples.ToArray();
+            var expected = data.ToArray();
             MathNet.Numerics.IntegralTransforms.Fourier.Inverse(
                 expected,
                 MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
 
-            var actual = samples.ToArray();
+            var actual = data.ToArray();
             var fftFlat = new FftFlat.FastFourierTransform(length);
-            fftFlat.InverseInplace(actual);
+            fftFlat.Inverse(actual);
 
             for (var i = 0; i < length; i++)
             {

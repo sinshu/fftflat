@@ -32,8 +32,8 @@ namespace FftFlatTest
 
             var actual = expected.ToArray();
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.ForwardInplace(actual);
-            fft.InverseInplace(actual);
+            fft.Forward(actual);
+            fft.Inverse(actual);
 
             for (var i = 0; i < length; i++)
             {
@@ -67,8 +67,8 @@ namespace FftFlatTest
 
             var actual = expected.ToArray();
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.ForwardInplace(actual);
-            fft.InverseInplace(actual);
+            fft.Forward(actual);
+            fft.Inverse(actual);
 
             for (var i = 0; i < length; i++)
             {

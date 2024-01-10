@@ -12,7 +12,7 @@ static class Program
         samples[0] = 1;
 
         var fft = new FastFourierTransform(1024);
-        fft.ForwardInplace(samples);
+        fft.Forward(samples);
 
         Console.WriteLine(samples.All(x => Math.Abs(x.Real - 1) < 1.0E-6));
         Console.WriteLine(samples.All(x => Math.Abs(x.Imaginary) < 1.0E-6));

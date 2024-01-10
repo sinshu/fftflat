@@ -43,7 +43,7 @@ namespace FftFlat
         /// Performs forward FFT in-place.
         /// </summary>
         /// <param name="samples">The samples to be transformed.</param>
-        public unsafe void ForwardInplace(Span<Complex> samples)
+        public unsafe void Forward(Span<Complex> samples)
         {
             if (samples.Length != length)
             {
@@ -63,7 +63,7 @@ namespace FftFlat
         /// Performs inverse FFT in-place.
         /// </summary>
         /// <param name="spectrum">The spectrum to be transformed.</param>
-        public unsafe void InverseInplace(Span<Complex> spectrum)
+        public unsafe void Inverse(Span<Complex> spectrum)
         {
             if (spectrum.Length != length)
             {
@@ -79,48 +79,6 @@ namespace FftFlat
             }
 
             ArrayMath.MultiplyInplace(MemoryMarshal.Cast<Complex, double>(spectrum), inverseScaling);
-        }
-
-        /// <summary>
-        /// Performs forward FFT.
-        /// </summary>
-        /// <param name="source">The samples to be transformed.</param>
-        /// <param name="destination">The destination to store the transformed samples.</param>
-        public void Forward(ReadOnlySpan<Complex> source, Span<Complex> destination)
-        {
-            if (source.Length != length)
-            {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(source));
-            }
-
-            if (destination.Length != length)
-            {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(destination));
-            }
-
-            source.CopyTo(destination);
-            ForwardInplace(destination);
-        }
-
-        /// <summary>
-        /// Performs inverse FFT.
-        /// </summary>
-        /// <param name="source">The spectrum to be transformed.</param>
-        /// <param name="destination">The destination to store the transformed spectrum.</param>
-        public void Inverse(ReadOnlySpan<Complex> source, Span<Complex> destination)
-        {
-            if (source.Length != length)
-            {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(source));
-            }
-
-            if (destination.Length != length)
-            {
-                throw new ArgumentException("The length of the span must match the FFT length.", nameof(destination));
-            }
-
-            source.CopyTo(destination);
-            InverseInplace(destination);
         }
 
         /// <summary>

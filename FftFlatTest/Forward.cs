@@ -22,13 +22,13 @@ namespace FftFlatTest
         [TestCase(8192)]
         public void Impulse(int length)
         {
-            var samples = new Complex[length];
-            samples[0] = 1;
+            var data = new Complex[length];
+            data[0] = 1;
 
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.ForwardInplace(samples);
+            fft.Forward(data);
 
-            foreach (var value in samples)
+            foreach (var value in data)
             {
                 Assert.That(value.Real, Is.EqualTo(1.0).Within(1.0E-6));
                 Assert.That(value.Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
@@ -46,31 +46,31 @@ namespace FftFlatTest
         [TestCase(1024, 8)]
         public void Sine(int length, int w)
         {
-            var samples = new Complex[length];
+            var data = new Complex[length];
             for (var i = 0; i < length; i++)
             {
-                samples[i] = Math.Sin(2 * Math.PI * w * i / length);
+                data[i] = Math.Sin(2 * Math.PI * w * i / length);
             }
 
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.ForwardInplace(samples);
+            fft.Forward(data);
 
             for (var i = 0; i < length; i++)
             {
                 if (i == w)
                 {
-                    Assert.That(samples[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(samples[i].Imaginary, Is.EqualTo(-length / 2.0).Within(1.0E-6));
+                    Assert.That(data[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(data[i].Imaginary, Is.EqualTo(-length / 2.0).Within(1.0E-6));
                 }
                 else if (i == length - w)
                 {
-                    Assert.That(samples[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(samples[i].Imaginary, Is.EqualTo(length / 2.0).Within(1.0E-6));
+                    Assert.That(data[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(data[i].Imaginary, Is.EqualTo(length / 2.0).Within(1.0E-6));
                 }
                 else
                 {
-                    Assert.That(samples[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(samples[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(data[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(data[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
             }
         }
@@ -86,31 +86,31 @@ namespace FftFlatTest
         [TestCase(1024, 8)]
         public void Cosine(int length, int w)
         {
-            var samples = new Complex[length];
+            var data = new Complex[length];
             for (var i = 0; i < length; i++)
             {
-                samples[i] = Math.Cos(2 * Math.PI * w * i / length);
+                data[i] = Math.Cos(2 * Math.PI * w * i / length);
             }
 
             var fft = new FftFlat.FastFourierTransform(length);
-            fft.ForwardInplace(samples);
+            fft.Forward(data);
 
             for (var i = 0; i < length; i++)
             {
                 if (i == w)
                 {
-                    Assert.That(samples[i].Real, Is.EqualTo(length / 2.0).Within(1.0E-6));
-                    Assert.That(samples[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(data[i].Real, Is.EqualTo(length / 2.0).Within(1.0E-6));
+                    Assert.That(data[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
                 else if (i == length - w)
                 {
-                    Assert.That(samples[i].Real, Is.EqualTo(length / 2.0).Within(1.0E-6));
-                    Assert.That(samples[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(data[i].Real, Is.EqualTo(length / 2.0).Within(1.0E-6));
+                    Assert.That(data[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
                 else
                 {
-                    Assert.That(samples[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(samples[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(data[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(data[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
             }
         }

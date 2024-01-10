@@ -75,8 +75,8 @@ namespace Benchmark
         [Benchmark]
         public void FftFlat()
         {
-            fftFlat.ForwardInplace(values_FftFlat);
-            fftFlat.InverseInplace(values_FftFlat);
+            fftFlat.Forward(values_FftFlat);
+            fftFlat.Inverse(values_FftFlat);
         }
 
         [Benchmark]

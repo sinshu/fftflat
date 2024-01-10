@@ -25,9 +25,9 @@ namespace FftFlatTest
             samples[0] = 1;
 
             var rft = new FftFlat.RealFourierTransform(length);
-            var result = rft.ForwardInplace(samples);
+            var spectrum = rft.ForwardInplace(samples);
 
-            foreach (var value in result)
+            foreach (var value in spectrum)
             {
                 Assert.That(value.Real, Is.EqualTo(1.0).Within(1.0E-6));
                 Assert.That(value.Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
@@ -52,19 +52,19 @@ namespace FftFlatTest
             }
 
             var rft = new FftFlat.RealFourierTransform(length);
-            var result = rft.ForwardInplace(samples);
+            var spectrum = rft.ForwardInplace(samples);
 
-            for (var i = 0; i < result.Length; i++)
+            for (var i = 0; i < spectrum.Length; i++)
             {
                 if (i == w)
                 {
-                    Assert.That(result[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(result[i].Imaginary, Is.EqualTo(-length / 2.0).Within(1.0E-6));
+                    Assert.That(spectrum[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(spectrum[i].Imaginary, Is.EqualTo(-length / 2.0).Within(1.0E-6));
                 }
                 else
                 {
-                    Assert.That(result[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(result[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(spectrum[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(spectrum[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
             }
         }
@@ -87,19 +87,19 @@ namespace FftFlatTest
             }
 
             var rft = new FftFlat.RealFourierTransform(length);
-            var result = rft.ForwardInplace(samples);
+            var spectrum = rft.ForwardInplace(samples);
 
-            for (var i = 0; i < result.Length; i++)
+            for (var i = 0; i < spectrum.Length; i++)
             {
                 if (i == w)
                 {
-                    Assert.That(result[i].Real, Is.EqualTo(length / 2.0).Within(1.0E-6));
-                    Assert.That(result[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(spectrum[i].Real, Is.EqualTo(length / 2.0).Within(1.0E-6));
+                    Assert.That(spectrum[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
                 else
                 {
-                    Assert.That(result[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
-                    Assert.That(result[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(spectrum[i].Real, Is.EqualTo(0.0).Within(1.0E-6));
+                    Assert.That(spectrum[i].Imaginary, Is.EqualTo(0.0).Within(1.0E-6));
                 }
             }
         }
