@@ -54,6 +54,8 @@ namespace FftFlat
         /// </returns>
         /// <remarks>
         /// The length of the <paramref name="samples"/> must be the FFT length + 2.
+        /// The last two elements of the <paramref name="samples"/> are used to store the Nyquist frequency component after the forward transform.
+        /// Therefore, these two elements are ignored in the forward transform.
         /// </remarks>
         public unsafe Span<Complex> Forward(Span<double> samples)
         {
