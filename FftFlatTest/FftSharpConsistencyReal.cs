@@ -36,6 +36,7 @@ namespace FftFlatTest
             var fftFlat = new FftFlat.RealFourierTransform(length);
             var actual = fftFlat.Forward(samples);
 
+            Assert.That(actual.Length == expected.Length);
             for (var i = 0; i < expected.Length; i++)
             {
                 Assert.That(actual[i].Real, Is.EqualTo(expected[i].Real).Within(1.0E-6));
@@ -73,6 +74,7 @@ namespace FftFlatTest
             var fftFlat = new FftFlat.RealFourierTransform(length);
             var actual = fftFlat.Inverse(spectrum);
 
+            Assert.That(actual.Length - 2 == expected.Length);
             for (var i = 0; i < expected.Length; i++)
             {
                 Assert.That(actual[i], Is.EqualTo(expected[i]).Within(1.0E-6));
