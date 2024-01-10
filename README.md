@@ -39,7 +39,7 @@ var samples = new Complex[1024];
 samples[0] = 1;
 
 var fft = new FastFourierTransform(1024);
-fft.ForwardInplace(samples);
+fft.Forward(samples);
 ```
 
 
@@ -72,34 +72,44 @@ The following is a benchmark comparing this with other pure C# FFT implementatio
 In this benchmark, the time taken to perform FFT and IFFT on a random signal was measured.
 The FFT lengths used were powers of two, ranging from 256 to 8192.
 
-| Method    | Length | Mean         | Error     | StdDev    | Gen0   | Allocated |
-|---------- |------- |-------------:|----------:|----------:|-------:|----------:|
-| **FftFlat**   | **256**    |     **1.635 μs** | **0.0060 μs** | **0.0056 μs** |      **-** |         **-** |
-| FftSharp  | 256    |    20.868 μs | 0.0910 μs | 0.0851 μs |      - |         - |
-| MathNet   | 256    |     7.641 μs | 0.0272 μs | 0.0255 μs |      - |         - |
-| **FftFlat**   | **512**    |     **3.725 μs** | **0.0060 μs** | **0.0056 μs** |      **-** |         **-** |
-| FftSharp  | 512    |    46.425 μs | 0.0742 μs | 0.0658 μs |      - |         - |
-| MathNet   | 512    |    15.886 μs | 0.0274 μs | 0.0243 μs |      - |         - |
-| **FftFlat**   | **1024**   |     **7.798 μs** | **0.0165 μs** | **0.0146 μs** |      **-** |         **-** |
-| FftSharp  | 1024   |   101.918 μs | 0.5292 μs | 0.4950 μs |      - |         - |
-| MathNet   | 1024   |    39.738 μs | 0.0880 μs | 0.0823 μs | 1.6479 |   21400 B |
-| **FftFlat**   | **2048**   |    **17.728 μs** | **0.0457 μs** | **0.0428 μs** |      **-** |         **-** |
-| FftSharp  | 2048   |   220.215 μs | 0.7828 μs | 0.7323 μs |      - |         - |
-| MathNet   | 2048   |    72.424 μs | 0.4255 μs | 0.3772 μs | 1.9531 |   25744 B |
-| **FftFlat**   | **4096**   |    **36.908 μs** | **0.1140 μs** | **0.1066 μs** |      **-** |         **-** |
-| FftSharp  | 4096   |   475.229 μs | 1.0854 μs | 0.9622 μs |      - |         - |
-| MathNet   | 4096   |   180.050 μs | 1.4773 μs | 1.3096 μs | 2.4414 |   33864 B |
-| **FftFlat**   | **8192**   |    **84.125 μs** | **0.2458 μs** | **0.2299 μs** |      **-** |         **-** |
-| FftSharp  | 8192   | 1,027.164 μs | 4.5749 μs | 4.2794 μs |      - |       1 B |
-| MathNet   | 8192   |   340.598 μs | 2.9078 μs | 2.5777 μs | 3.4180 |   47438 B |
+### Complex FFT
 
-![A graphical plot of the table above.](plot.png)
+| Method   | Length | Mean         | Error     | StdDev    | Median       | Gen0    | Gen1    | Gen2    | Allocated |
+|--------- |------- |-------------:|----------:|----------:|-------------:|--------:|--------:|--------:|----------:|
+| FftFlat  | 2048   |    17.664 μs | 0.0444 μs | 0.0415 μs |    17.664 μs |       - |       - |       - |         - |
+| FftSharp | 2048   |   203.196 μs | 0.6797 μs | 0.6358 μs |   203.137 μs |       - |       - |       - |         - |
+| MathNet  | 2048   |    71.875 μs | 0.5197 μs | 0.4340 μs |    71.836 μs |  1.9531 |       - |       - |   25660 B |
+| FftFlat  | 4096   |    36.990 μs | 0.2119 μs | 0.1983 μs |    37.014 μs |       - |       - |       - |         - |
+| FftSharp | 4096   |   439.636 μs | 1.4182 μs | 1.3265 μs |   439.750 μs |       - |       - |       - |         - |
+| MathNet  | 4096   |   157.341 μs | 0.6241 μs | 0.5211 μs |   157.270 μs |  2.4414 |       - |       - |   33650 B |
+| FftFlat  | 8192   |    83.777 μs | 0.1272 μs | 0.1128 μs |    83.769 μs |       - |       - |       - |         - |
+| FftSharp | 8192   |   954.118 μs | 2.7325 μs | 2.5560 μs |   953.749 μs |       - |       - |       - |         - |
+| MathNet  | 8192   |   343.381 μs | 5.1914 μs | 4.8561 μs |   339.598 μs |  3.4180 |       - |       - |   47481 B |
+
+![A graphical plot of the table above.](plot_cfft.png)
+
+### Real FFT
+
+| Method   | Length | Mean         | Error     | StdDev    | Median       | Gen0    | Gen1    | Gen2    | Allocated |
+|--------- |------- |-------------:|----------:|----------:|-------------:|--------:|--------:|--------:|----------:|
+| FftFlat  | 2048   |    10.303 μs | 0.0359 μs | 0.0336 μs |    10.296 μs |       - |       - |       - |         - |
+| FftSharp | 2048   |   208.290 μs | 0.6072 μs | 0.5679 μs |   208.354 μs |  7.3242 |  0.7324 |       - |   98416 B |
+| MathNet  | 2048   |    77.546 μs | 0.5357 μs | 0.4749 μs |    77.576 μs |  7.0801 |  0.8545 |       - |   90663 B |
+| FftFlat  | 4096   |    22.647 μs | 0.1032 μs | 0.0966 μs |    22.640 μs |       - |       - |       - |         - |
+| FftSharp | 4096   |   454.185 μs | 1.5450 μs | 1.4452 μs |   454.305 μs | 14.6484 |  3.4180 |       - |  196720 B |
+| MathNet  | 4096   |   179.540 μs | 1.2277 μs | 1.1484 μs |   179.667 μs | 12.6953 |  2.9297 |       - |  165035 B |
+| FftFlat  | 8192   |    47.374 μs | 0.2011 μs | 0.1881 μs |    47.337 μs |       - |       - |       - |         - |
+| FftSharp | 8192   | 1,034.310 μs | 3.5584 μs | 3.1544 μs | 1,034.975 μs | 82.0313 | 82.0313 | 82.0313 |  393356 B |
+| MathNet  | 8192   |   417.383 μs | 0.5965 μs | 0.5288 μs |   417.317 μs | 83.0078 | 83.0078 | 83.0078 |  309285 B |
+
+![A graphical plot of the table above.](plot_rfft.png)
 
 
 
 ## Todo
 
 * ✅ FFT for power-of-two length samples
+* ✅ Real FFT
 * ⬜ Other transformations (such as cosine transform)
 * ⬜ Support for 32-bit floating-point numbers
 * ⬜ FFT for arbitrary length samples

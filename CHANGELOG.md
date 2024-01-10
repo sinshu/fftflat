@@ -1,3 +1,10 @@
+# v1.0.0
+
+* Added real FFT.
+* Dropped out-place methods.
+
+
+
 # v0.3.1
 
 * Fixed potential issue where IFFT may fail with very short FFT lengths.
