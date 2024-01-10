@@ -68,10 +68,12 @@ namespace FftFlat
             {
                 fftsg.rdft(length, 1, a, ip, w);
 
+                // Ooura's implementation stores the component of the Nyquist frequency in a[1].
                 a[length] = a[1];
                 a[length + 1] = 0;
                 a[1] = 0;
 
+                // To match with Math.NET, the sign of the imaginary part is inverted.
                 for (var i = 1; i < length; i += 2)
                 {
                     a[i] = -a[i];
@@ -104,11 +106,13 @@ namespace FftFlat
             {
                 var a = (double*)ptr;
 
+                // To match with Math.NET, the sign of the imaginary part is inverted.
                 for (var i = 1; i < length; i += 2)
                 {
                     a[i] = -a[i];
                 }
 
+                // Ooura's implementation stores the component of the Nyquist frequency in a[1].
                 a[1] = a[length];
                 a[length] = 0;
                 a[length + 1] = 0;
