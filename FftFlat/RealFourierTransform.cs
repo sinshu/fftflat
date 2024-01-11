@@ -55,7 +55,7 @@ namespace FftFlat
         /// <remarks>
         /// The length of the <paramref name="samples"/> must be the FFT length + 2.
         /// The last two elements of the <paramref name="samples"/> are used to store the Nyquist frequency component after the forward transform.
-        /// Therefore, these two elements are ignored in the forward transform.
+        /// These two elements are ignored in the forward transform.
         /// </remarks>
         public unsafe Span<Complex> Forward(Span<double> samples)
         {
@@ -91,6 +91,7 @@ namespace FftFlat
         /// <param name="spectrum">The spectrum to be transformed.</param>
         /// <returns>
         /// Returns the view of the results as a <see cref="Span{T}"/> of <see cref="double"/> after the inverse FFT is performed in-place.
+        /// The length of this view is the FFT length + 2. The last two elements are cleared to zero.
         /// </returns>
         /// /// <remarks>
         /// The length of the <paramref name="spectrum"/> must be the FFT length / 2 + 1.
