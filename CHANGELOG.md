@@ -1,3 +1,9 @@
+# v1.0.1
+
+* Improved doc comment for real FFT.
+
+
+
 # v1.0.0
 
 * Added real FFT.
