@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Nobuaki Tanaka</Authors>
-    <Description>A fast FFT implementation in pure C#</Description>
+    <Description>A fast FFT (Fast Fourier Transform) implementation in pure C#</Description>
     <PackageProjectUrl>https://github.com/sinshu/fftflat</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sinshu/fftflat</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
