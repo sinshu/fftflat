@@ -5,7 +5,7 @@ This library is adapted from [General Purpose FFT Package by Ooura](https://www.
 modified to be compatible with the .NET Standard complex number type.
 
 This library was created as an FFT implementation for [NumFlat](https://github.com/sinshu/numflat),
-a comprehensive numerical computing library written in pure C#.
+a general purpose numerical computing library written in pure C#.
 If you're interested in numerical computing with C#, please check out [NumFlat](https://github.com/sinshu/numflat).
 
 
