@@ -7,20 +7,45 @@ namespace FftFlat
         private int p;
         private int q;
         private int a;
+        private double pdq;
+        private double qdp;
 
         public Resampler(int p, int q, int a)
         {
             this.p = p;
             this.q = q;
             this.a = a;
+            this.pdq = (double)p / q;
+            this.qdp = (double)q / p;
         }
 
         public void Resample(ReadOnlySpan<double> source, Span<double> destination)
         {
+            if (p > q)
+            {
+                Upsample(source, destination);
+            }
+            else
+            {
+                Downsample(source, destination);
+            }
+        }
+
+        private void Upsample(ReadOnlySpan<double> source, Span<double> destination)
+        {
             for (var i = 0; i < destination.Length; i++)
             {
-                var position = (double)i * q / p;
+                var position = i * qdp;
                 destination[i] = NaiveResample(source, position, 1, a);
+            }
+        }
+
+        private void Downsample(ReadOnlySpan<double> source, Span<double> destination)
+        {
+            for (var i = 0; i < destination.Length; i++)
+            {
+                var position = i * qdp;
+                destination[i] = pdq * NaiveResample(source, position, qdp, a);
             }
         }
 

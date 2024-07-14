@@ -9,27 +9,55 @@ static class Program
 {
     static void Main(string[] args)
     {
-        var resampler = new Resampler(10, 1, 5);
-        var source = new double[100];
-        for (var i = 0; i < source.Length; i++)
         {
-            source[i] = Math.Sin(2 * Math.PI * i / 4);
-        }
-        var destination = new double[1000];
-        resampler.Resample(source, destination);
-
-        using (var writer = new StreamWriter("source.csv"))
-        {
-            foreach (var x in source)
+            var resampler = new Resampler(3, 2, 5);
+            var source = new double[667];
+            for (var i = 0; i < source.Length; i++)
             {
-                writer.WriteLine(x);
+                source[i] = Math.Sin(2 * Math.PI * i / 60);
+            }
+            var destination = new double[1000];
+            resampler.Resample(source, destination);
+
+            using (var writer = new StreamWriter("us_source.csv"))
+            {
+                foreach (var x in source)
+                {
+                    writer.WriteLine(x);
+                }
+            }
+            using (var writer = new StreamWriter("us_destination.csv"))
+            {
+                foreach (var x in destination)
+                {
+                    writer.WriteLine(x);
+                }
             }
         }
-        using (var writer = new StreamWriter("destination.csv"))
+
         {
-            foreach (var x in destination)
+            var resampler = new Resampler(2, 3, 5);
+            var source = new double[1000];
+            for (var i = 0; i < source.Length; i++)
             {
-                writer.WriteLine(x);
+                source[i] = Math.Sin(2 * Math.PI * i / 60);
+            }
+            var destination = new double[667];
+            resampler.Resample(source, destination);
+
+            using (var writer = new StreamWriter("ds_source.csv"))
+            {
+                foreach (var x in source)
+                {
+                    writer.WriteLine(x);
+                }
+            }
+            using (var writer = new StreamWriter("ds_destination.csv"))
+            {
+                foreach (var x in destination)
+                {
+                    writer.WriteLine(x);
+                }
             }
         }
     }
