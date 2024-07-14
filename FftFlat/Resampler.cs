@@ -17,6 +17,17 @@ namespace FftFlat
             }
         }
 
+        internal static int Gcd(int a, int b)
+        {
+            while (b != 0)
+            {
+                var temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
         internal static double Sinc(double x)
         {
             var y = Math.PI * x;
