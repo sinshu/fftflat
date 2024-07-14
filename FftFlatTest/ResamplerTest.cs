@@ -63,5 +63,31 @@ namespace FftFlatTest
                 Assert.That(Math.Abs(y2) > 0.0027);
             }
         }
+
+        [Test]
+        public void Lanczos()
+        {
+            Assert.That(FftFlat.Resampler.Lanczos(0, 1), Is.EqualTo(1.0));
+            Assert.That(FftFlat.Resampler.Lanczos(0, 2), Is.EqualTo(1.0));
+            Assert.That(FftFlat.Resampler.Lanczos(0, 3), Is.EqualTo(1.0));
+
+            for (var x = -10; x <= 10; x++)
+            {
+                if (x == 0)
+                {
+                    Assert.That(FftFlat.Resampler.Lanczos(x, 10), Is.EqualTo(1.0));
+                }
+                else
+                {
+                    Assert.That(FftFlat.Resampler.Lanczos(x, 10), Is.EqualTo(0.0).Within(1.0E-12));
+                }
+            }
+
+            Assert.That(FftFlat.Resampler.Lanczos(1.29671, 2), Is.EqualTo(-0.0864415).Within(1.0E-6));
+            Assert.That(FftFlat.Resampler.Lanczos(-1.29671, 2), Is.EqualTo(-0.0864415).Within(1.0E-6));
+
+            Assert.That(FftFlat.Resampler.Lanczos(1.37368, 3), Is.EqualTo(-0.147267).Within(1.0E-6));
+            Assert.That(FftFlat.Resampler.Lanczos(-1.37368, 3), Is.EqualTo(-0.147267).Within(1.0E-6));
+        }
     }
 }

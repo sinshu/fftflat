@@ -9,10 +9,10 @@ namespace FftFlat
         {
             using (var writer = new StreamWriter("test.csv"))
             {
-                for (var i = -1000; i <= 1000; i++)
+                for (var i = -200; i <= 200; i++)
                 {
                     var x = (double)i / 100;
-                    writer.WriteLine(Sinc(x));
+                    writer.WriteLine(Sinc(x) + "," + Lanczos(x, 2));
                 }
             }
         }
@@ -39,6 +39,16 @@ namespace FftFlat
             {
                 return Math.Sin(y) / y;
             }
+        }
+
+        internal static double Lanczos(double x, int a)
+        {
+            return Sinc(x) * Sinc(x / a);
+        }
+
+        internal static double NaiveResample(ReadOnlySpan<double> source, double position, double sincFactor)
+        {
+            return 0;
         }
     }
 }
