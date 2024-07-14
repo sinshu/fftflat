@@ -1,19 +1,26 @@
 ﻿using System;
-using System.IO;
 
 namespace FftFlat
 {
     public sealed class Resampler
     {
-        public void Resample(ReadOnlySpan<double> source, ReadOnlySpan<double> detsination)
+        private int p;
+        private int q;
+        private int a;
+
+        public Resampler(int p, int q, int a)
         {
-            using (var writer = new StreamWriter("test.csv"))
+            this.p = p;
+            this.q = q;
+            this.a = a;
+        }
+
+        public void Resample(ReadOnlySpan<double> source, Span<double> destination)
+        {
+            for (var i = 0; i < destination.Length; i++)
             {
-                for (var i = -200; i <= 200; i++)
-                {
-                    var x = (double)i / 100;
-                    writer.WriteLine(Sinc(x) + "," + Lanczos(x, 2));
-                }
+                var position = (double)i * q / p;
+                destination[i] = NaiveResample(source, position, 1, a);
             }
         }
 
@@ -46,9 +53,26 @@ namespace FftFlat
             return Sinc(x) * Sinc(x / a);
         }
 
-        internal static double NaiveResample(ReadOnlySpan<double> source, double position, double sincFactor)
+        internal static double NaiveResample(ReadOnlySpan<double> source, double position, double sincFactor, int a)
         {
-            return 0;
+            var left = (int)Math.Floor(position - a * sincFactor) + 1;
+            var right = (int)Math.Ceiling(position + a * sincFactor);
+
+            if (left < 0)
+            {
+                left = 0;
+            }
+            if (right > source.Length)
+            {
+                right = source.Length;
+            }
+
+            var sum = 0.0;
+            for (var i = left; i < right; i++)
+            {
+                sum += Lanczos((i - position) / sincFactor, a);
+            }
+            return sum;
         }
     }
 }
