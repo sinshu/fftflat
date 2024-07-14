@@ -70,7 +70,7 @@ namespace FftFlat
             var sum = 0.0;
             for (var i = left; i < right; i++)
             {
-                sum += Lanczos((i - position) / sincFactor, a);
+                sum += source[i] * Lanczos((i - position) / sincFactor, a);
             }
             return sum;
         }
