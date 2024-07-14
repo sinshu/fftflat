@@ -20,6 +20,8 @@ namespace FftFlatTest
             Assert.That(FftFlat.Resampler.Gcd(4, 12), Is.EqualTo(4));
             Assert.That(FftFlat.Resampler.Gcd(18, 12), Is.EqualTo(6));
             Assert.That(FftFlat.Resampler.Gcd(12, 18), Is.EqualTo(6));
+            Assert.That(FftFlat.Resampler.Gcd(48000, 44100), Is.EqualTo(300));
+            Assert.That(FftFlat.Resampler.Gcd(44100, 48000), Is.EqualTo(300));
         }
 
         [Test]
