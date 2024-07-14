@@ -25,9 +25,21 @@ namespace FftFlat
             {
                 Upsample(source, destination);
             }
-            else
+            else if (q > p)
             {
                 Downsample(source, destination);
+            }
+            else
+            {
+                if (destination.Length <= source.Length)
+                {
+                    source.Slice(0, destination.Length).CopyTo(destination);
+                }
+                else
+                {
+                    source.CopyTo(destination.Slice(0, source.Length));
+                    destination.Slice(source.Length).Clear();
+                }
             }
         }
 
