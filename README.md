@@ -22,8 +22,8 @@ modified to be compatible with the .NET Standard complex number type.
 
 [The NuGet package](https://www.nuget.org/packages/FftFlat) is available:
 
-```ps1
-Install-Package FftFlat
+```
+dotnet add package FftFlat
 ```
 
 If you don't want to add a DLL, copy [the .cs files](https://github.com/sinshu/fftflat/tree/main/FftFlat) to your project.
