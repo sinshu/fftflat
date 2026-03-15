@@ -76,7 +76,7 @@ namespace FftFlatTest
                 length,
                 MathNet.Numerics.IntegralTransforms.FourierOptions.AsymmetricScaling);
 
-            var actual = data.ToArray();
+            var actual = data.ToArray().AsSpan();
             var fftFlat = new FftFlat.RealFourierTransform(length);
             fftFlat.Inverse(MemoryMarshal.Cast<double, Complex>(actual));
 
